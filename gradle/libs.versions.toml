@@ -1,0 +1,49 @@
+[versions]
+activityCompose = "1.12.2"
+agp = "8.13.2"
+com-squareup-retrofit2 = "3.0.0"
+composeBom = "2025.12.01"
+coreKtx = "1.17.0"
+espressoCore = "3.7.0"
+google-dagger-hilt = "2.57.2"
+junit = "4.13.2"
+junitVersion = "1.3.0"
+kotlin = "2.3.0"
+lifecycleRuntimeKtx = "2.10.0"
+
+[libraries]
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
+androidx-compose-ui = { module = "androidx.compose.ui:ui" }
+androidx-compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
+androidx-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+androidx-datastore = "androidx.datastore:datastore:1.2.0"
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
+androidx-hilt-navigation-compose = "androidx.hilt:hilt-navigation-compose:1.3.0"
+androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
+androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+google-dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "google-dagger-hilt" }
+google-dagger-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "google-dagger-hilt" }
+google-dagger-hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "google-dagger-hilt" }
+jetbrains-kotlin-seralization = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
+jetbrains-kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0"
+junit = { module = "junit:junit", version.ref = "junit" }
+squareup-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "com-squareup-retrofit2" }
+squareup-okhttp3 = "com.squareup.okhttp3:okhttp:5.3.2"
+squareup-retrofit2 = { module = "com.squareup.retrofit2:retrofit", version.ref = "com-squareup-retrofit2" }
+timber = "com.jakewharton.timber:timber:5.0.1"
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+dagger-hilt-android-plugin = { id = "dagger.hilt.android.plugin" }
+google-devtools-ksp = "com.google.devtools.ksp:2.3.4"
+jetbrains-kotlin-serialization-plugin = { id = "org.jetbrains.kotlin.plugin.serialization" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+version-catalog-update = "nl.littlerobots.version-catalog-update:1.0.1"
