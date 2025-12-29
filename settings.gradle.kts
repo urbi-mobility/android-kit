@@ -19,7 +19,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Urbi Android(Kit"
+rootProject.name = "Urbi Android Kit"
 include(":app")
 include(":storage")
 include(":storage:data")

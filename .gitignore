@@ -1,0 +1,163 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+
+
+# ==========================================
+# Android / Kotlin / Jetpack Compose Project
+# Multi-module friendly
+# ==========================================
+
+# Gradle files
+.gradle/
+build/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE files
+.idea/
+*.ipr
+*.iws
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.idea/tasks.xml
+.idea/gradle.xml
+.idea/compiler.xml
+.idea/jarRepositories.xml
+.idea/deploymentTargetDropDown.xml
+.idea/misc.xml
+.idea/runConfigurations.xml
+
+# Mac / Linux / Windows system files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Keystore files (don’t keep secrets in git!)
+*.jks
+*.keystore
+*.key
+*.pem
+*.p12
+
+# Signing & API keys
+secrets.properties
+**/secrets.properties
+signing.properties
+**/signing.properties
+
+# Kotlin / Java
+*.jar
+*.war
+*.ear
+*.apk
+*.ap_
+
+# Generated files
+captures/
+outputs/
+generated/
+out/
+navigation.json
+buildSrc/.gradle/
+buildSrc/build/
+buildSrc/.kotlin/
+
+# Android Studio Profiling
+*.hprof
+
+# Lint
+lint/intermediates/
+lint/generated/
+lint/outputs/
+lint/tmp/
+# if you want reports in git, remove next line
+*.lint
+
+# Logs
+*.log
+
+# Unit test reports
+test-results/
+*.ec
+*.exec
+*.out
+
+# Crashlytics / Firebase
+fabric.properties
+crashlytics.properties
+crashlytics-build.properties
+
+# Local caches
+.cxx/
+.externalNativeBuild/
+
+# Kotlin specific
+.kobalt/
+kotlinc/
+.kotlin/
+kotlin-js-store/
+
+# Jetpack Compose Compiler Metrics (optional, comment if you want to keep them in repo)
+compose-metrics/
+compose-reports/
+
+# Gradle local configuration
+gradle-app.setting
+gradle-app.properties
+
+# Misc
+*.orig
+*.rej
+*.swp
+*.bak
+*.tmp
+*.dex
+
+# NDK / CMake
+obj/
+*.so
+
+# Android Test / Coverage
+*.aab
+coverage/
+coverage.ec
+jacoco.exec
+
+# JetBrains Toolbox / caches
+.idea/modules/
+.idea/shelf/
+
+# VSCode (if someone uses it)
+.vscode/
+
+# ==================================================
+# If you use Fastlane (iOS/Android release automation)
+# ==================================================
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# ==================================================
+# Optional: ignore local run configs
+# ==================================================
+.idea/runConfigurations/
+
