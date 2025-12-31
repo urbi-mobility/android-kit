@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-
+    alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.dagger.hilt.android.plugin)
     alias(libs.plugins.google.devtools.ksp)
 }
@@ -71,9 +71,15 @@ dependencies {
 
 
 dependencies{
-
     implementation(libs.google.dagger.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.google.dagger.hilt.android.compiler)
 }
 
+dependencies{
+    implementation(libs.timber)
+}
+
+dependencies{
+    implementation(project(DataStore.MODULE))
+}

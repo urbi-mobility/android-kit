@@ -21,6 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Urbi Android Kit"
 include(":app")
-include(":storage")
-include(":storage:data")
-include(":storage:domain")
+include(":data_store")
