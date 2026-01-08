@@ -6,25 +6,95 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import co.urbi.android.kit.examples.data_store.DataStoreExamplesScreen
+import co.urbi.android.kit.examples.data_store.PreferencesDataStoreExample
 import co.urbi.android.kit.examples.data_store.SecureDataStoreExample
 import co.urbi.android.kit.ui.theme.UrbiAndroidKitTheme
 
+sealed class Screen {
+    data object Home : Screen()
+    data object SecureDataStore : Screen()
+    data object PreferencesDataStore : Screen()
+}
 
 class MainActivity : ComponentActivity() {
 
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             UrbiAndroidKitTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                var currentScreen by remember { mutableStateOf<Screen>(Screen.Home) }
 
-                    SecureDataStoreExample(modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding))
-
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    topBar = {
+                        TopAppBar(
+                            title = {
+                                Text(
+                                    text = when (currentScreen) {
+                                        Screen.Home -> "DataStore Examples"
+                                        Screen.SecureDataStore -> "SecureDataStore"
+                                        Screen.PreferencesDataStore -> "PreferencesDataStore"
+                                    }
+                                )
+                            },
+                            navigationIcon = {
+                                if (currentScreen != Screen.Home) {
+                                    IconButton(onClick = { currentScreen = Screen.Home }) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                            contentDescription = "Back"
+                                        )
+                                    }
+                                }
+                            }
+                        )
+                    }
+                ) { innerPadding ->
+                    when (currentScreen) {
+                        Screen.Home -> {
+                            DataStoreExamplesScreen(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(innerPadding),
+                                onNavigateToSecureDataStore = {
+                                    currentScreen = Screen.SecureDataStore
+                                },
+                                onNavigateToPreferencesDataStore = {
+                                    currentScreen = Screen.PreferencesDataStore
+                                }
+                            )
+                        }
+                        Screen.SecureDataStore -> {
+                            SecureDataStoreExample(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(innerPadding)
+                            )
+                        }
+                        Screen.PreferencesDataStore -> {
+                            PreferencesDataStoreExample(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(innerPadding)
+                            )
+                        }
+                    }
                 }
             }
         }
