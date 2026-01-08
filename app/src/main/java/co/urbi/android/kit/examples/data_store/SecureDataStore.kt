@@ -34,24 +34,36 @@ fun SecureDataStoreExample(modifier: Modifier = Modifier) {
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+
+    // Create separate instances - they use different files
+    val encryptedDataStore = remember { DataStoreInstance.getEncryptedInstance(context = context) }
+    val rawDataStore = remember { DataStoreInstance.getRawInstance(context = context) }
+
     var useEncryption by remember { mutableStateOf(false) }
-    val dataStoreInstance = remember(useEncryption) {
-        if (useEncryption) {
-            DataStoreInstance.getEncryptedInstance(context = context)
-        } else {
-            DataStoreInstance.getRawInstance(context = context)
+
+    var encryptedAccessToken by remember { mutableStateOf("") }
+    var encryptedRefreshToken by remember { mutableStateOf("") }
+    var rawAccessToken by remember { mutableStateOf("") }
+    var rawRefreshToken by remember { mutableStateOf("") }
+
+    LaunchedEffect(Unit) {
+        launch {
+            encryptedDataStore.data().collectLatest {
+                encryptedAccessToken = it.accessToken
+                encryptedRefreshToken = it.refreshToken
+            }
+        }
+        launch {
+            rawDataStore.data().collectLatest {
+                rawAccessToken = it.accessToken
+                rawRefreshToken = it.refreshToken
+            }
         }
     }
-    var accessToken by remember { mutableStateOf("") }
-    var refreshToken by remember { mutableStateOf("") }
 
-
-    LaunchedEffect(useEncryption) {
-        dataStoreInstance.data().collectLatest {
-            accessToken = it.accessToken
-            refreshToken = it.refreshToken
-        }
-    }
+    val currentDataStore = if (useEncryption) encryptedDataStore else rawDataStore
+    val accessToken = if (useEncryption) encryptedAccessToken else rawAccessToken
+    val refreshToken = if (useEncryption) encryptedRefreshToken else rawRefreshToken
 
 
     Column(
@@ -124,7 +136,7 @@ fun SecureDataStoreExample(modifier: Modifier = Modifier) {
                     Button(
                         onClick = {
                             scope.launch {
-                                dataStoreInstance.updateData { data ->
+                                currentDataStore.updateData { data ->
                                     data.copy(
                                         accessToken = UUID.randomUUID().toString(),
                                         refreshToken = UUID.randomUUID().toString()
@@ -140,7 +152,7 @@ fun SecureDataStoreExample(modifier: Modifier = Modifier) {
                     Button(
                         onClick = {
                             scope.launch {
-                                dataStoreInstance.updateData { data ->
+                                currentDataStore.updateData { data ->
                                     data.copy(
                                         accessToken = "",
                                         refreshToken = ""

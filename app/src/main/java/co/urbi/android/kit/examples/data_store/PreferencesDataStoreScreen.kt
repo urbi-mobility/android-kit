@@ -33,46 +33,86 @@ fun PreferencesDataStoreExample(modifier: Modifier = Modifier) {
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+
+    // Create separate instances - they use different file names
+    val encryptedPrefsDataStore = remember { PreferencesDataStoreInstance.getEncryptedInstance(context = context) }
+    val rawPrefsDataStore = remember { PreferencesDataStoreInstance.getRawInstance(context = context) }
+
     var useEncryption by remember { mutableStateOf(false) }
-    val prefsDataStore = remember(useEncryption) {
-        if (useEncryption) {
-            PreferencesDataStoreInstance.getEncryptedInstance(context = context)
-        } else {
-            PreferencesDataStoreInstance.getRawInstance(context = context)
+
+    // Separate state for encrypted and raw
+    var encryptedUsername by remember { mutableStateOf("") }
+    var encryptedUserId by remember { mutableStateOf(0) }
+    var encryptedIsPremium by remember { mutableStateOf(false) }
+    var encryptedBalance by remember { mutableStateOf(0.0) }
+    var encryptedLoginCount by remember { mutableStateOf(0L) }
+    var encryptedRating by remember { mutableStateOf(0f) }
+    var encryptedTags by remember { mutableStateOf(setOf<String>()) }
+
+    var rawUsername by remember { mutableStateOf("") }
+    var rawUserId by remember { mutableStateOf(0) }
+    var rawIsPremium by remember { mutableStateOf(false) }
+    var rawBalance by remember { mutableStateOf(0.0) }
+    var rawLoginCount by remember { mutableStateOf(0L) }
+    var rawRating by remember { mutableStateOf(0f) }
+    var rawTags by remember { mutableStateOf(setOf<String>()) }
+
+    LaunchedEffect(Unit) {
+        // Encrypted data store flows
+        launch {
+            encryptedPrefsDataStore.getString("username").collectLatest { encryptedUsername = it ?: "" }
+        }
+        launch {
+            encryptedPrefsDataStore.getInt("user_id").collectLatest { encryptedUserId = it ?: 0 }
+        }
+        launch {
+            encryptedPrefsDataStore.getBoolean("is_premium").collectLatest { encryptedIsPremium = it ?: false }
+        }
+        launch {
+            encryptedPrefsDataStore.getDouble("balance").collectLatest { encryptedBalance = it ?: 0.0 }
+        }
+        launch {
+            encryptedPrefsDataStore.getLong("login_count").collectLatest { encryptedLoginCount = it ?: 0L }
+        }
+        launch {
+            encryptedPrefsDataStore.getFloat("rating").collectLatest { encryptedRating = it ?: 0f }
+        }
+        launch {
+            encryptedPrefsDataStore.getStringSet("tags").collectLatest { encryptedTags = it ?: setOf() }
+        }
+
+        // Raw data store flows
+        launch {
+            rawPrefsDataStore.getString("username").collectLatest { rawUsername = it ?: "" }
+        }
+        launch {
+            rawPrefsDataStore.getInt("user_id").collectLatest { rawUserId = it ?: 0 }
+        }
+        launch {
+            rawPrefsDataStore.getBoolean("is_premium").collectLatest { rawIsPremium = it ?: false }
+        }
+        launch {
+            rawPrefsDataStore.getDouble("balance").collectLatest { rawBalance = it ?: 0.0 }
+        }
+        launch {
+            rawPrefsDataStore.getLong("login_count").collectLatest { rawLoginCount = it ?: 0L }
+        }
+        launch {
+            rawPrefsDataStore.getFloat("rating").collectLatest { rawRating = it ?: 0f }
+        }
+        launch {
+            rawPrefsDataStore.getStringSet("tags").collectLatest { rawTags = it ?: setOf() }
         }
     }
 
-    var username by remember { mutableStateOf("") }
-    var userId by remember { mutableStateOf(0) }
-    var isPremium by remember { mutableStateOf(false) }
-    var balance by remember { mutableStateOf(0.0) }
-    var loginCount by remember { mutableStateOf(0L) }
-    var rating by remember { mutableStateOf(0f) }
-    var tags by remember { mutableStateOf(setOf<String>()) }
-
-    LaunchedEffect(useEncryption) {
-        launch {
-            prefsDataStore.getString("username").collectLatest { username = it ?: "" }
-        }
-        launch {
-            prefsDataStore.getInt("user_id").collectLatest { userId = it ?: 0 }
-        }
-        launch {
-            prefsDataStore.getBoolean("is_premium").collectLatest { isPremium = it ?: false }
-        }
-        launch {
-            prefsDataStore.getDouble("balance").collectLatest { balance = it ?: 0.0 }
-        }
-        launch {
-            prefsDataStore.getLong("login_count").collectLatest { loginCount = it ?: 0L }
-        }
-        launch {
-            prefsDataStore.getFloat("rating").collectLatest { rating = it ?: 0f }
-        }
-        launch {
-            prefsDataStore.getStringSet("tags").collectLatest { tags = it ?: setOf() }
-        }
-    }
+    val currentPrefsDataStore = if (useEncryption) encryptedPrefsDataStore else rawPrefsDataStore
+    val username = if (useEncryption) encryptedUsername else rawUsername
+    val userId = if (useEncryption) encryptedUserId else rawUserId
+    val isPremium = if (useEncryption) encryptedIsPremium else rawIsPremium
+    val balance = if (useEncryption) encryptedBalance else rawBalance
+    val loginCount = if (useEncryption) encryptedLoginCount else rawLoginCount
+    val rating = if (useEncryption) encryptedRating else rawRating
+    val tags = if (useEncryption) encryptedTags else rawTags
 
     Column(
         modifier = modifier
@@ -145,13 +185,13 @@ fun PreferencesDataStoreExample(modifier: Modifier = Modifier) {
                         onClick = {
                             scope.launch {
                                 // Write all types of data
-                                prefsDataStore.putString("username", "user_${Random.nextInt(1000)}")
-                                prefsDataStore.putInt("user_id", Random.nextInt(10000))
-                                prefsDataStore.putBoolean("is_premium", Random.nextBoolean())
-                                prefsDataStore.putDouble("balance", Random.nextDouble(0.0, 10000.0))
-                                prefsDataStore.putLong("login_count", Random.nextLong(0, 1000))
-                                prefsDataStore.putFloat("rating", Random.nextFloat() * 5)
-                                prefsDataStore.putStringSet("tags", setOf("tag${Random.nextInt(10)}", "tag${Random.nextInt(10)}"))
+                                currentPrefsDataStore.putString("username", "user_${Random.nextInt(1000)}")
+                                currentPrefsDataStore.putInt("user_id", Random.nextInt(10000))
+                                currentPrefsDataStore.putBoolean("is_premium", Random.nextBoolean())
+                                currentPrefsDataStore.putDouble("balance", Random.nextDouble(0.0, 10000.0))
+                                currentPrefsDataStore.putLong("login_count", Random.nextLong(0, 1000))
+                                currentPrefsDataStore.putFloat("rating", Random.nextFloat() * 5)
+                                currentPrefsDataStore.putStringSet("tags", setOf("tag${Random.nextInt(10)}", "tag${Random.nextInt(10)}"))
                             }
                         },
                         modifier = Modifier.weight(1f)
@@ -162,7 +202,7 @@ fun PreferencesDataStoreExample(modifier: Modifier = Modifier) {
                     Button(
                         onClick = {
                             scope.launch {
-                                prefsDataStore.clear()
+                                currentPrefsDataStore.clear()
                             }
                         },
                         modifier = Modifier.weight(1f)
@@ -214,14 +254,14 @@ fun PreferencesDataStoreExample(modifier: Modifier = Modifier) {
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Button(
-                        onClick = { scope.launch { prefsDataStore.remove("username") } },
+                        onClick = { scope.launch { currentPrefsDataStore.remove("username") } },
                         modifier = Modifier.weight(1f)
                     ) {
                         Text(text = "Remove Username", style = MaterialTheme.typography.bodySmall)
                     }
 
                     Button(
-                        onClick = { scope.launch { prefsDataStore.remove("user_id") } },
+                        onClick = { scope.launch { currentPrefsDataStore.remove("user_id") } },
                         modifier = Modifier.weight(1f)
                     ) {
                         Text(text = "Remove User ID", style = MaterialTheme.typography.bodySmall)
