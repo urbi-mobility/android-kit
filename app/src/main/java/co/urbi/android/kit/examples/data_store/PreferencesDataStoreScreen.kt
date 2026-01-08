@@ -26,33 +26,53 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.util.UUID
-
+import kotlin.random.Random
 
 @Composable
-fun SecureDataStoreExample(modifier: Modifier = Modifier) {
+fun PreferencesDataStoreExample(modifier: Modifier = Modifier) {
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var useEncryption by remember { mutableStateOf(false) }
-    val dataStoreInstance = remember(useEncryption) {
+    val prefsDataStore = remember(useEncryption) {
         if (useEncryption) {
-            DataStoreInstance.getEncryptedInstance(context = context)
+            PreferencesDataStoreInstance.getEncryptedInstance(context = context)
         } else {
-            DataStoreInstance.getRawInstance(context = context)
+            PreferencesDataStoreInstance.getRawInstance(context = context)
         }
     }
-    var accessToken by remember { mutableStateOf("") }
-    var refreshToken by remember { mutableStateOf("") }
 
+    var username by remember { mutableStateOf("") }
+    var userId by remember { mutableStateOf(0) }
+    var isPremium by remember { mutableStateOf(false) }
+    var balance by remember { mutableStateOf(0.0) }
+    var loginCount by remember { mutableStateOf(0L) }
+    var rating by remember { mutableStateOf(0f) }
+    var tags by remember { mutableStateOf(setOf<String>()) }
 
     LaunchedEffect(useEncryption) {
-        dataStoreInstance.data().collectLatest {
-            accessToken = it.accessToken
-            refreshToken = it.refreshToken
+        launch {
+            prefsDataStore.getString("username").collectLatest { username = it ?: "" }
+        }
+        launch {
+            prefsDataStore.getInt("user_id").collectLatest { userId = it ?: 0 }
+        }
+        launch {
+            prefsDataStore.getBoolean("is_premium").collectLatest { isPremium = it ?: false }
+        }
+        launch {
+            prefsDataStore.getDouble("balance").collectLatest { balance = it ?: 0.0 }
+        }
+        launch {
+            prefsDataStore.getLong("login_count").collectLatest { loginCount = it ?: 0L }
+        }
+        launch {
+            prefsDataStore.getFloat("rating").collectLatest { rating = it ?: 0f }
+        }
+        launch {
+            prefsDataStore.getStringSet("tags").collectLatest { tags = it ?: setOf() }
         }
     }
-
 
     Column(
         modifier = modifier
@@ -63,12 +83,12 @@ fun SecureDataStoreExample(modifier: Modifier = Modifier) {
     ) {
 
         Text(
-            text = "SecureDataStore Example",
+            text = "PreferencesDataStore Example",
             style = MaterialTheme.typography.headlineMedium
         )
 
         Text(
-            text = "Proto DataStore for structured objects with Kotlin Serialization",
+            text = "Demonstrates key-value storage with encryption support",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -124,33 +144,30 @@ fun SecureDataStoreExample(modifier: Modifier = Modifier) {
                     Button(
                         onClick = {
                             scope.launch {
-                                dataStoreInstance.updateData { data ->
-                                    data.copy(
-                                        accessToken = UUID.randomUUID().toString(),
-                                        refreshToken = UUID.randomUUID().toString()
-                                    )
-                                }
+                                // Write all types of data
+                                prefsDataStore.putString("username", "user_${Random.nextInt(1000)}")
+                                prefsDataStore.putInt("user_id", Random.nextInt(10000))
+                                prefsDataStore.putBoolean("is_premium", Random.nextBoolean())
+                                prefsDataStore.putDouble("balance", Random.nextDouble(0.0, 10000.0))
+                                prefsDataStore.putLong("login_count", Random.nextLong(0, 1000))
+                                prefsDataStore.putFloat("rating", Random.nextFloat() * 5)
+                                prefsDataStore.putStringSet("tags", setOf("tag${Random.nextInt(10)}", "tag${Random.nextInt(10)}"))
                             }
                         },
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text(text = "Generate Tokens")
+                        Text(text = "Write Random Data")
                     }
 
                     Button(
                         onClick = {
                             scope.launch {
-                                dataStoreInstance.updateData { data ->
-                                    data.copy(
-                                        accessToken = "",
-                                        refreshToken = ""
-                                    )
-                                }
+                                prefsDataStore.clear()
                             }
                         },
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text(text = "Clear Tokens")
+                        Text(text = "Clear All")
                     }
                 }
             }
@@ -165,15 +182,21 @@ fun SecureDataStoreExample(modifier: Modifier = Modifier) {
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Text(
-                    text = "Current User Model",
+                    text = "Stored Values",
                     style = MaterialTheme.typography.titleMedium
                 )
 
-                TokenItem(label = "Access Token", value = accessToken.ifEmpty { "Not set" })
-                TokenItem(label = "Refresh Token", value = refreshToken.ifEmpty { "Not set" })
+                PreferenceItem(label = "Username (String)", value = username.ifEmpty { "Not set" })
+                PreferenceItem(label = "User ID (Int)", value = userId.toString())
+                PreferenceItem(label = "Is Premium (Boolean)", value = isPremium.toString())
+                PreferenceItem(label = "Balance (Double)", value = "%.2f".format(balance))
+                PreferenceItem(label = "Login Count (Long)", value = loginCount.toString())
+                PreferenceItem(label = "Rating (Float)", value = "%.2f".format(rating))
+                PreferenceItem(label = "Tags (StringSet)", value = tags.joinToString(", ").ifEmpty { "None" })
             }
         }
 
+        // Individual Remove Buttons
         Card(
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -182,22 +205,35 @@ fun SecureDataStoreExample(modifier: Modifier = Modifier) {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "About",
+                    text = "Remove Individual Keys",
                     style = MaterialTheme.typography.titleMedium
                 )
-                Text(
-                    text = "This example uses SecureDataStore to persist a serializable UserModel object. " +
-                            "The entire object is stored as a single entity and can be optionally encrypted.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Button(
+                        onClick = { scope.launch { prefsDataStore.remove("username") } },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(text = "Remove Username", style = MaterialTheme.typography.bodySmall)
+                    }
+
+                    Button(
+                        onClick = { scope.launch { prefsDataStore.remove("user_id") } },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(text = "Remove User ID", style = MaterialTheme.typography.bodySmall)
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-private fun TokenItem(label: String, value: String) {
+private fun PreferenceItem(label: String, value: String) {
     Column {
         Text(
             text = label,
@@ -206,8 +242,8 @@ private fun TokenItem(label: String, value: String) {
         )
         Text(
             text = value,
-            style = MaterialTheme.typography.bodyMedium,
-            maxLines = 2
+            style = MaterialTheme.typography.bodyLarge
         )
     }
 }
+

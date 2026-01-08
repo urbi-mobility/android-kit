@@ -15,6 +15,7 @@ android {
 
 dependencies {
     implementation(libs.androidx.datastore)
+    implementation(libs.androidx.datastore.preferences.core)
     implementation(libs.jetbrains.kotlinx.serialization.json)
 }
 
