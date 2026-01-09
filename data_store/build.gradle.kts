@@ -21,3 +21,7 @@ dependencies {
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
 }
+
+dependencies{
+    implementation(libs.tink)
+}

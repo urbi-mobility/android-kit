@@ -2,6 +2,7 @@ package co.urbi.android.kit.data_store.data
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
+import co.urbi.android.kit.data_store.data.crypto.CryptoManager
 import co.urbi.android.kit.data_store.domain.SecureDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.InternalSerializationApi

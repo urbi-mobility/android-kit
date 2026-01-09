@@ -1,4 +1,4 @@
-package co.urbi.android.kit.data_store.data
+package co.urbi.android.kit.data_store.data.crypto
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
@@ -10,7 +10,6 @@ import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
-
 
 internal class Cipher(private val setup: CipherSetup) : CryptoManager {
     private val cipher = Cipher.getInstance("${setup.algorithm}/${setup.blockMode}/${setup.padding}")
@@ -40,11 +39,12 @@ internal class Cipher(private val setup: CipherSetup) : CryptoManager {
     }
 
     override fun encrypt(bytes: ByteArray): ByteArray {
-        cipher.init(Cipher.ENCRYPT_MODE, getKey())
+        cipher.init(javax.crypto.Cipher.ENCRYPT_MODE, getKey())
         val iv = cipher.iv
         val encryptedBytes = cipher.doFinal(bytes)
         return iv+encryptedBytes
     }
+
     override fun decrypt(inputStream: InputStream): InputStream {
         val bytes = inputStream.readBytes()
         val iv = bytes.copyOfRange(0, cipher.blockSize)
@@ -53,10 +53,4 @@ internal class Cipher(private val setup: CipherSetup) : CryptoManager {
         val decryptedBytes = cipher.doFinal(data)
         return ByteArrayInputStream(decryptedBytes)
     }
-}
-
-
-interface CryptoManager {
-     fun encrypt(bytes: ByteArray): ByteArray
-     fun decrypt(inputStream: InputStream): InputStream
 }

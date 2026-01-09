@@ -1,6 +1,7 @@
 package co.urbi.android.kit.data_store.data
 
 import androidx.datastore.core.Serializer
+import co.urbi.android.kit.data_store.data.crypto.CryptoManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.KSerializer
