@@ -18,7 +18,7 @@ internal class Tink(
     init {
         AeadConfig.register()
         val keysetHandle = AndroidKeysetManager.Builder()
-            .withSharedPref(setup.context, setup.keysetName, setup.keysetFileName)
+            .withSharedPref(setup.context.applicationContext, setup.keysetName, setup.keysetFileName)
             .withKeyTemplate(setup.keyTemplate)
             .withMasterKeyUri("android-keystore://${setup.keysetName}")
             .build()
