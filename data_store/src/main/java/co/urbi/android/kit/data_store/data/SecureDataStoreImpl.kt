@@ -13,7 +13,7 @@ import java.io.File
 internal class SecureDataStoreImpl<T>(
     private val default: T,
     private val file: File,
-    private val crypto: Crypto?,
+    private val cryptoManager: CryptoManager?,
 ) : SecureDataStore<T> {
 
     private val dataStore: DataStore<T> by lazy { provideDataStore() }
@@ -33,11 +33,10 @@ internal class SecureDataStoreImpl<T>(
         return DataStoreFactory.create(
             serializer = DataStoreSerializer(
                 default = default,
-                crypto = crypto,
+                cryptoManager = cryptoManager,
                 serializer = serializer
             ),
             produceFile = { file }
         )
     }
-
 }

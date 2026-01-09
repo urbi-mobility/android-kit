@@ -3,7 +3,7 @@ package co.urbi.android.kit.examples.data_store
 import android.content.Context
 import android.security.keystore.KeyProperties
 import co.urbi.android.kit.data_store.domain.SecureDataStore
-import co.urbi.android.kit.data_store.domain.model.CryptoSetup
+import co.urbi.android.kit.data_store.domain.model.CipherSetup
 import java.io.File
 
 object DataStoreInstance {
@@ -13,7 +13,7 @@ object DataStoreInstance {
             default = UserModel(),
             file = File(context.filesDir, "urbi-kit-encrypted.pb"),
         ).encrypt(
-            CryptoSetup(
+            CipherSetup(
                 alias = "urbi-kit-encrypted",
                 algorithm = KeyProperties.KEY_ALGORITHM_AES,
                 blockMode = KeyProperties.BLOCK_MODE_CBC,

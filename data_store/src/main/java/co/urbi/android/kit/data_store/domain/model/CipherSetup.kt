@@ -1,6 +1,6 @@
 package co.urbi.android.kit.data_store.domain.model
 
-data class CryptoSetup(
+data class CipherSetup(
     val alias: String,
     val algorithm: String,
     val blockMode: String,

@@ -20,14 +20,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             UrbiAndroidKitTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-
                     SecureDataStoreExample(modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding))
-
                 }
             }
         }
     }
-
 }

@@ -27,7 +27,7 @@ fun SecureDataStoreExample(modifier: Modifier = Modifier) {
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val dataStoreInstance = remember { DataStoreInstance.getRawInstance(context = context) }
+    val dataStoreInstance = remember { DataStoreInstance.getEncryptedInstance(context = context) }
     var accessToken by remember { mutableStateOf("") }
     var refreshToken by remember { mutableStateOf("") }
 

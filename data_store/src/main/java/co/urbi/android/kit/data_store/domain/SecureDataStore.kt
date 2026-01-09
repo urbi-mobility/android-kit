@@ -1,8 +1,8 @@
 package co.urbi.android.kit.data_store.domain
 
-import co.urbi.android.kit.data_store.data.Crypto
+import co.urbi.android.kit.data_store.data.Cipher
 import co.urbi.android.kit.data_store.data.SecureDataStoreImpl
-import co.urbi.android.kit.data_store.domain.model.CryptoSetup
+import co.urbi.android.kit.data_store.domain.model.CipherSetup
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
@@ -11,10 +11,10 @@ interface SecureDataStore<T> {
     suspend fun updateData(transform: suspend (t: T) -> T): T
 
     class Builder<T>(private val default: T, private val file: File) {
-        internal var cryptoSetup: CryptoSetup? = null
+        internal var cipherSetup: CipherSetup? = null
 
-        fun encrypt(setup: CryptoSetup): Builder<T> {
-            cryptoSetup = setup
+        fun encrypt(cipher: CipherSetup): Builder<T> {
+            cipherSetup = cipher
             return this
         }
 
@@ -22,7 +22,10 @@ interface SecureDataStore<T> {
             return SecureDataStoreImpl(
                 default = default,
                 file = file,
-                crypto = cryptoSetup?.let { setup -> Crypto(setup) }
+                cryptoManager = when {
+                    cipherSetup != null -> cipherSetup?.let { Cipher(setup = it) }
+                    else -> null
+                }
             )
         }
     }

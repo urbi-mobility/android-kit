@@ -7,12 +7,11 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.Base64
 
 
 internal class DataStoreSerializer<T>(
     private val default: T,
-    private val crypto: Crypto?,
+    private val cryptoManager: CryptoManager?,
     private val serializer: KSerializer<T>
 ) :
     Serializer<T> {
@@ -20,32 +19,21 @@ internal class DataStoreSerializer<T>(
         get() = default
 
     override suspend fun readFrom(input: InputStream): T {
-        val inputBytes = withContext(Dispatchers.IO) {
-            input.use { it.readBytes() }
-        }
-        val jsonString =
-            crypto?.decryption(inputBytes)?.decodeToString() ?: inputBytes.decodeToString()
-        return Json.decodeFromString(serializer, jsonString)
+        val inputString = withContext(Dispatchers.IO) {
+            val inputStream = cryptoManager?.decrypt(inputStream = input) ?: input
+            inputStream.use { it.readBytes() }
+        }.decodeToString()
+        return Json.decodeFromString(serializer, inputString)
     }
 
     override suspend fun writeTo(t: T, output: OutputStream) {
-        val json = Json.encodeToString(serializer, t)
-        val bytes = json.toByteArray()
-        val outputBytes = crypto?.encryption(bytes) ?: bytes
+        val inputString = Json.encodeToString(serializer, t)
+        val bytes = inputString.toByteArray()
         withContext(Dispatchers.IO) {
+            val info = cryptoManager?.encrypt(bytes = bytes) ?: bytes
             output.use {
-                it.write(outputBytes)
+                it.write(info)
             }
         }
-    }
-
-    private fun Crypto.encryption(bytes: ByteArray): ByteArray {
-        val encryptedBytes = this.encrypt(bytes)
-        return Base64.getEncoder().encode(encryptedBytes)
-    }
-
-    private fun Crypto.decryption(bytes: ByteArray): ByteArray {
-        val encryptedBytesDecoded = Base64.getDecoder().decode(bytes)
-        return this.decrypt(encryptedBytesDecoded)
     }
 }
