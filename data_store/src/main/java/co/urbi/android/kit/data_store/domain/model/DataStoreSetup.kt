@@ -5,6 +5,13 @@ import java.io.File
 
 interface DataStoreSetup {
     val file: FileType
+    class Builder(private val file: FileType){
+        fun build(): DataStoreSetup {
+            return object : DataStoreSetup {
+                override val file: FileType = this@Builder.file
+            }
+        }
+    }
 }
 
 sealed interface FileType {

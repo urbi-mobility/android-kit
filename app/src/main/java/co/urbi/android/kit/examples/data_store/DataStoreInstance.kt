@@ -12,10 +12,9 @@ import co.urbi.android.kit.data_store.domain.model.TinkSetup
 object DataStoreInstance {
 
     fun getCipherInstance(context: Context): SecureDataStore<UserModel> {
-        val setup = object : DataStoreSetup {
-            override val file: FileType =
-                FileType.CredentialProtectedFile(context = context, fileName = "urbi-kit-encrypted")
-        }
+        val setup = DataStoreSetup.Builder(
+            file = FileType.CredentialProtectedFile(context, "urbi-kit-encrypted")
+        ).build()
         return SecureDataStore.Builder(
             default = UserModel(),
             setup = setup,
@@ -30,10 +29,9 @@ object DataStoreInstance {
     }
 
     fun getTinkInstance(context: Context): SecureDataStore<UserModel> {
-        val setup = object : DataStoreSetup {
-            override val file: FileType =
-                FileType.CredentialProtectedFile(context = context, fileName = "urbi-kit-encrypted")
-        }
+        val setup = DataStoreSetup.Builder(
+            file = FileType.CredentialProtectedFile(context, "urbi-kit-encrypted")
+        ).build()
         return SecureDataStore.Builder(
             default = UserModel(),
             setup = setup,
@@ -47,10 +45,9 @@ object DataStoreInstance {
     }
 
     fun getRawInstance(context: Context): SecureDataStore<UserModel> {
-        val setup = object : DataStoreSetup {
-            override val file: FileType =
-                FileType.CredentialProtectedFile(context = context, fileName = "urbi-kit-encrypted")
-        }
+        val setup = DataStoreSetup.Builder(
+            file = FileType.CredentialProtectedFile(context, "urbi-kit-encrypted")
+        ).build()
         return SecureDataStore.Builder(
             default = UserModel(),
             setup = setup,
