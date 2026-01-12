@@ -7,6 +7,7 @@ import co.urbi.android.kit.data_store.domain.model.CipherSetup
 import co.urbi.android.kit.data_store.domain.model.TinkSetup
 import java.io.File
 
+
 object DataStoreInstance {
 
     fun getCipherInstance(context: Context): SecureDataStore<UserModel> {
