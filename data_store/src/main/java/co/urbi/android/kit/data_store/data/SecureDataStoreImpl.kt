@@ -2,18 +2,21 @@ package co.urbi.android.kit.data_store.data
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
+import androidx.datastore.core.deviceProtectedDataStoreFile
+import androidx.datastore.dataStoreFile
 import co.urbi.android.kit.data_store.data.crypto.CryptoManager
+import co.urbi.android.kit.data_store.domain.model.DataStoreSetup
+import co.urbi.android.kit.data_store.domain.model.FileType
 import co.urbi.android.kit.data_store.domain.SecureDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.serializer
-import java.io.File
 
 
 internal class SecureDataStoreImpl<T>(
     private val default: T,
-    private val file: File,
+    private val setup: DataStoreSetup,
     private val cryptoManager: CryptoManager?,
 ) : SecureDataStore<T> {
 
@@ -37,7 +40,13 @@ internal class SecureDataStoreImpl<T>(
                 cryptoManager = cryptoManager,
                 serializer = serializer
             ),
-            produceFile = { file }
+            produceFile = {
+                when (val file = setup.file) {
+                    is FileType.CredentialProtectedFile -> file.context.dataStoreFile(fileName = file.fileName)
+                    is FileType.DeviceProtectedFile -> file.context.deviceProtectedDataStoreFile(fileName = file.fileName)
+                    is FileType.CustomProtectedFile -> file.file
+                }
+            }
         )
     }
 }

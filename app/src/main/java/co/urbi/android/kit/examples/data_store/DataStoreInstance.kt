@@ -2,18 +2,23 @@ package co.urbi.android.kit.examples.data_store
 
 import android.content.Context
 import android.security.keystore.KeyProperties
+import co.urbi.android.kit.data_store.domain.model.DataStoreSetup
+import co.urbi.android.kit.data_store.domain.model.FileType
 import co.urbi.android.kit.data_store.domain.SecureDataStore
 import co.urbi.android.kit.data_store.domain.model.CipherSetup
 import co.urbi.android.kit.data_store.domain.model.TinkSetup
-import java.io.File
 
 
 object DataStoreInstance {
 
     fun getCipherInstance(context: Context): SecureDataStore<UserModel> {
+        val setup = object : DataStoreSetup {
+            override val file: FileType =
+                FileType.CredentialProtectedFile(context = context, fileName = "urbi-kit-encrypted")
+        }
         return SecureDataStore.Builder(
             default = UserModel(),
-            file = File(context.filesDir, "urbi-kit-encrypted.pb"),
+            setup = setup,
         ).encrypt(
             CipherSetup(
                 alias = "urbi-kit-encrypted",
@@ -24,10 +29,14 @@ object DataStoreInstance {
         ).build()
     }
 
-    fun getTinkInstance(context: Context): SecureDataStore<UserModel>{
+    fun getTinkInstance(context: Context): SecureDataStore<UserModel> {
+        val setup = object : DataStoreSetup {
+            override val file: FileType =
+                FileType.CredentialProtectedFile(context = context, fileName = "urbi-kit-encrypted")
+        }
         return SecureDataStore.Builder(
             default = UserModel(),
-            file = File(context.filesDir, "urbi-kit-tink-encrypted.pb"),
+            setup = setup,
         ).encrypt(
             TinkSetup(
                 context = context.applicationContext,
@@ -38,9 +47,13 @@ object DataStoreInstance {
     }
 
     fun getRawInstance(context: Context): SecureDataStore<UserModel> {
+        val setup = object : DataStoreSetup {
+            override val file: FileType =
+                FileType.CredentialProtectedFile(context = context, fileName = "urbi-kit-encrypted")
+        }
         return SecureDataStore.Builder(
             default = UserModel(),
-            file = File(context.filesDir, "urbi-kit-raw.pb"),
+            setup = setup,
         ).build()
     }
 
