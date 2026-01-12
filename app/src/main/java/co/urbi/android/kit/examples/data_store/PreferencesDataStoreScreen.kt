@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import co.urbi.android.kit.examples.data_store.utils.DataStoreInstance
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlin.random.Random
@@ -35,8 +36,8 @@ fun PreferencesDataStoreExample(modifier: Modifier = Modifier) {
     val scope = rememberCoroutineScope()
 
     // Create separate instances - they use different file names
-    val encryptedPrefsDataStore = remember { PreferencesDataStoreInstance.getEncryptedInstance(context = context) }
-    val rawPrefsDataStore = remember { PreferencesDataStoreInstance.getRawInstance(context = context) }
+    val encryptedPrefsDataStore = remember { DataStoreInstance.Preferences.getTinkInstance(context = context) }
+    val rawPrefsDataStore = remember { DataStoreInstance.Preferences.getRawInstance(context = context) }
 
     var useEncryption by remember { mutableStateOf(false) }
 

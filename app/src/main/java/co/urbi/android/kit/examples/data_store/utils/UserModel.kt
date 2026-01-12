@@ -1,4 +1,4 @@
-package co.urbi.android.kit.examples.data_store
+package co.urbi.android.kit.examples.data_store.utils
 
 import kotlinx.serialization.Serializable
 

@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import co.urbi.android.kit.examples.data_store.utils.DataStoreInstance
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -36,8 +37,8 @@ fun SecureDataStoreExample(modifier: Modifier = Modifier) {
     val scope = rememberCoroutineScope()
 
     // Create separate instances - they use different files
-    val encryptedDataStore = remember { DataStoreInstance.getEncryptedInstance(context = context) }
-    val rawDataStore = remember { DataStoreInstance.getRawInstance(context = context) }
+    val encryptedDataStore = remember { DataStoreInstance.Proto.getTinkInstance(context = context) }
+    val rawDataStore = remember { DataStoreInstance.Proto.getRawInstance(context = context) }
 
     var useEncryption by remember { mutableStateOf(false) }
 

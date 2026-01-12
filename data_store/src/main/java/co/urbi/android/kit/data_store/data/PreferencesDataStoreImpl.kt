@@ -1,8 +1,9 @@
 package co.urbi.android.kit.data_store.data
 
-import android.content.Context
+
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
+import androidx.datastore.core.deviceProtectedDataStoreFile
 import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -13,20 +14,26 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
+import co.urbi.android.kit.data_store.data.crypto.CryptoManager
 import co.urbi.android.kit.data_store.domain.PreferencesDataStore
+import co.urbi.android.kit.data_store.domain.model.DataStoreSetup
+import co.urbi.android.kit.data_store.domain.model.FileType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 internal class PreferencesDataStoreImpl(
-    context: Context,
-    name: String,
-    private val crypto: Crypto?
+    private val setup: DataStoreSetup,
+    private val cryptoManager: CryptoManager?,
 ) : PreferencesDataStore {
 
     private val dataStore: DataStore<Preferences> by lazy {
         DataStoreFactory.create(
-            serializer = PreferencesSerializer(crypto),
-            produceFile = { context.dataStoreFile(name) }
+            serializer = PreferencesSerializer(cryptoManager),
+            produceFile = {  when (val file = setup.file) {
+                is FileType.CredentialProtectedFile -> file.context.dataStoreFile(fileName = file.fileName)
+                is FileType.DeviceProtectedFile -> file.context.deviceProtectedDataStoreFile(fileName = file.fileName)
+                is FileType.CustomProtectedFile -> file.file
+            } }
         )
     }
 

@@ -5,14 +5,16 @@ import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.mutablePreferencesOf
+import co.urbi.android.kit.data_store.data.crypto.CryptoManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.Base64
 
 internal class PreferencesSerializer(
-    private val crypto: Crypto?
+    private val cryptoManager: CryptoManager?,
 ) : Serializer<Preferences> {
 
     override val defaultValue: Preferences
@@ -20,25 +22,18 @@ internal class PreferencesSerializer(
 
     override suspend fun readFrom(input: InputStream): Preferences {
         val inputBytes = withContext(Dispatchers.IO) {
-            input.use { it.readBytes() }
+            val inputStream = cryptoManager?.decrypt(inputStream = input) ?: input
+            inputStream.use { it.readBytes() }
         }
-
-        if (inputBytes.isEmpty()) {
-            return emptyPreferences()
-        }
-
-        val decryptedBytes = crypto?.decryption(inputBytes) ?: inputBytes
-
-        return deserializePreferences(decryptedBytes)
+        return deserializePreferences(inputBytes)
     }
 
     override suspend fun writeTo(t: Preferences, output: OutputStream) {
-        val bytes = serializePreferences(t)
-        val outputBytes = crypto?.encryption(bytes) ?: bytes
-
+        val bytes = serializePreferences(preferences = t)
         withContext(Dispatchers.IO) {
+            val info = cryptoManager?.encrypt(bytes = bytes) ?: bytes
             output.use {
-                it.write(outputBytes)
+                it.write(info)
             }
         }
     }
@@ -102,14 +97,4 @@ internal class PreferencesSerializer(
         }
     }
 
-    private fun Crypto.encryption(bytes: ByteArray): ByteArray {
-        val encryptedBytes = this.encrypt(bytes)
-        return Base64.getEncoder().encode(encryptedBytes)
-    }
-
-    private fun Crypto.decryption(bytes: ByteArray): ByteArray {
-        val encryptedBytesDecoded = Base64.getDecoder().decode(bytes)
-        return this.decrypt(encryptedBytesDecoded)
-    }
 }
-

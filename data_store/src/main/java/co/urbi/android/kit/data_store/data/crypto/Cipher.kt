@@ -39,7 +39,7 @@ internal class Cipher(private val setup: CipherSetup) : CryptoManager {
     }
 
     override fun encrypt(bytes: ByteArray): ByteArray {
-        cipher.init(javax.crypto.Cipher.ENCRYPT_MODE, getKey())
+        cipher.init(Cipher.ENCRYPT_MODE, getKey())
         val iv = cipher.iv
         val encryptedBytes = cipher.doFinal(bytes)
         return iv+encryptedBytes
@@ -54,3 +54,4 @@ internal class Cipher(private val setup: CipherSetup) : CryptoManager {
         return ByteArrayInputStream(decryptedBytes)
     }
 }
+
