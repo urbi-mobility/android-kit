@@ -16,16 +16,16 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import co.urbi.android.kit.data_store.data.crypto.CryptoManager
 import co.urbi.android.kit.data_store.data.serializer.PreferencesSerializer
-import co.urbi.android.kit.data_store.domain.PreferencesDataStore
 import co.urbi.android.kit.data_store.domain.model.DataStoreSetup
 import co.urbi.android.kit.data_store.domain.model.FileType
+import co.urbi.android.kit.data_store.domain.PreferencesSecureDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 internal class PreferencesDataStoreImpl(
     private val setup: DataStoreSetup,
     private val cryptoManager: CryptoManager?,
-) : PreferencesDataStore {
+) : PreferencesSecureDataStore {
 
     private val dataStore: DataStore<Preferences> by lazy {
         DataStoreFactory.create(
@@ -102,7 +102,6 @@ internal class PreferencesDataStoreImpl(
 
     override suspend fun remove(key: String) {
         dataStore.edit { preferences ->
-            // Try to remove all possible types with this key
             preferences.remove(stringPreferencesKey(key))
             preferences.remove(intPreferencesKey(key))
             preferences.remove(booleanPreferencesKey(key))
@@ -117,4 +116,3 @@ internal class PreferencesDataStoreImpl(
         dataStore.edit { it.clear() }
     }
 }
-

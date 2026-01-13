@@ -6,20 +6,20 @@ import androidx.datastore.core.deviceProtectedDataStoreFile
 import androidx.datastore.dataStoreFile
 import co.urbi.android.kit.data_store.data.crypto.CryptoManager
 import co.urbi.android.kit.data_store.data.serializer.DataStoreSerializer
+import co.urbi.android.kit.data_store.domain.ProtoSecureDataStore
 import co.urbi.android.kit.data_store.domain.model.DataStoreSetup
 import co.urbi.android.kit.data_store.domain.model.FileType
-import co.urbi.android.kit.data_store.domain.SecureDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.serializer
 
 
-internal class SecureDataStoreImpl<T>(
-    private val default: T,
+internal class ProtoDataStoreImpl<T>(
+    private val schema:T,
     private val setup: DataStoreSetup,
     private val cryptoManager: CryptoManager?,
-) : SecureDataStore<T> {
+) : ProtoSecureDataStore<T> {
 
     private val dataStore: DataStore<T> by lazy { provideDataStore() }
 
@@ -34,10 +34,10 @@ internal class SecureDataStoreImpl<T>(
     @OptIn(InternalSerializationApi::class)
     private fun provideDataStore(): DataStore<T> {
         @Suppress("UNCHECKED_CAST")
-        val serializer: KSerializer<T> = default!!::class.serializer() as KSerializer<T>
+        val serializer: KSerializer<T> = schema!!::class.serializer() as KSerializer<T>
         return DataStoreFactory.create(
             serializer = DataStoreSerializer(
-                default = default,
+                default = schema,
                 cryptoManager = cryptoManager,
                 serializer = serializer
             ),

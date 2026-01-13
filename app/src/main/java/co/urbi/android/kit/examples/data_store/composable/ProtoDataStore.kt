@@ -1,4 +1,4 @@
-package co.urbi.android.kit.examples.data_store
+package co.urbi.android.kit.examples.data_store.composable
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,7 +22,7 @@ import co.urbi.android.kit.examples.data_store.state.DataStoreState
 
 
 @Composable
-fun SecureDataStoreExample(
+fun ProtoDataStore(
     modifier: Modifier = Modifier,
     state: DataStoreState,
     event: (DataStoreEvents) -> Unit
@@ -37,12 +37,12 @@ fun SecureDataStoreExample(
     ) {
 
         Text(
-            text = "SecureDataStore Example",
+            text = "Proto Data Store Example",
             style = MaterialTheme.typography.headlineMedium
         )
 
         Text(
-            text = "Proto DataStore for structured objects with Kotlin Serialization",
+            text = "Proto Data Store for structured objects with Kotlin Serialization",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

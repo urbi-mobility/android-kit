@@ -21,10 +21,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import co.urbi.android.kit.examples.data_store.DataStoreExamplesScreen
 import co.urbi.android.kit.examples.data_store.PreferencesDataStoreExample
-import co.urbi.android.kit.examples.data_store.SecureDataStoreExample
+import co.urbi.android.kit.examples.data_store.composable.ProtoDataStore
 import co.urbi.android.kit.examples.data_store.view_model.DataStoreViewModel
 import co.urbi.android.kit.ui.theme.UrbiAndroidKitTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -90,7 +89,7 @@ class MainActivity : ComponentActivity() {
                         Screen.SecureDataStore -> {
                             val viewModel = hiltViewModel<DataStoreViewModel>()
                             val state by viewModel.state.collectAsStateWithLifecycle()
-                            SecureDataStoreExample(
+                            ProtoDataStore(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .padding(innerPadding),

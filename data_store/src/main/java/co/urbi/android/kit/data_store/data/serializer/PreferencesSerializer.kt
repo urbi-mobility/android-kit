@@ -22,8 +22,7 @@ internal class PreferencesSerializer(
     private val cryptoManager: CryptoManager?,
 ) : Serializer<Preferences> {
 
-    override val defaultValue: Preferences
-        get() = emptyPreferences()
+    override val defaultValue: Preferences =  emptyPreferences()
 
     override suspend fun readFrom(input: InputStream): Preferences {
         val inputBytes = withContext(Dispatchers.IO) {

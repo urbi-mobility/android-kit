@@ -11,13 +11,12 @@ import java.io.OutputStream
 
 
 internal class DataStoreSerializer<T>(
-    private val default: T,
+    default: T,
     private val cryptoManager: CryptoManager?,
     private val serializer: KSerializer<T>
-) :
-    Serializer<T> {
-    override val defaultValue: T
-        get() = default
+) : Serializer<T> {
+
+    override val defaultValue: T = default
 
     override suspend fun readFrom(input: InputStream): T {
         val inputString = withContext(Dispatchers.IO) {
