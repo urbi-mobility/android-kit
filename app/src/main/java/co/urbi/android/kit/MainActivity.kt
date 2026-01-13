@@ -25,6 +25,7 @@ import co.urbi.android.kit.examples.data_store.DataStoreExamplesScreen
 import co.urbi.android.kit.examples.data_store.PreferencesDataStoreExample
 import co.urbi.android.kit.examples.data_store.composable.ProtoDataStore
 import co.urbi.android.kit.examples.data_store.view_model.DataStoreViewModel
+import co.urbi.android.kit.examples.data_store.view_model.PreferencesDataStoreViewModel
 import co.urbi.android.kit.ui.theme.UrbiAndroidKitTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -99,10 +100,14 @@ class MainActivity : ComponentActivity() {
                         }
 
                         Screen.PreferencesDataStore -> {
+                            val viewModel = hiltViewModel<PreferencesDataStoreViewModel>()
+                            val state by viewModel.state.collectAsStateWithLifecycle()
                             PreferencesDataStoreExample(
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .padding(innerPadding)
+                                    .padding(innerPadding),
+                                state = state,
+                                event = viewModel::uiEvents
                             )
                         }
                     }
