@@ -1,10 +1,11 @@
-package co.urbi.android.kit.data_store.data
+package co.urbi.android.kit.data_store.data.data_store
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.deviceProtectedDataStoreFile
 import androidx.datastore.dataStoreFile
 import co.urbi.android.kit.data_store.data.crypto.CryptoManager
+import co.urbi.android.kit.data_store.data.serializer.DataStoreSerializer
 import co.urbi.android.kit.data_store.domain.model.DataStoreSetup
 import co.urbi.android.kit.data_store.domain.model.FileType
 import co.urbi.android.kit.data_store.domain.SecureDataStore

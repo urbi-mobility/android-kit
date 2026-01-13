@@ -5,10 +5,12 @@ composeBom = "2025.12.01"
 coreKtx = "1.17.0"
 espressoCore = "3.7.0"
 google-dagger-hilt = "2.57.2"
-jetbrainsKotlinJvm = "2.3.0"
+#@pin
+jetbrainsKotlinJvm = "2.2.0"
 junit = "4.13.2"
 junitVersion = "1.3.0"
-kotlin = "2.3.0"
+#@pin
+kotlin = "2.2.0"
 lifecycleRuntimeKtx = "2.10.0"
 
 [libraries]

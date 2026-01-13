@@ -1,4 +1,4 @@
-package co.urbi.android.kit.data_store.data
+package co.urbi.android.kit.data_store.data.serializer
 
 import androidx.datastore.core.Serializer
 import co.urbi.android.kit.data_store.data.crypto.CryptoManager

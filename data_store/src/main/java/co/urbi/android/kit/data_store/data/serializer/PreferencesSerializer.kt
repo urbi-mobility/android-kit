@@ -1,17 +1,22 @@
-package co.urbi.android.kit.data_store.data
+package co.urbi.android.kit.data_store.data.serializer
 
 import androidx.datastore.core.Serializer
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.floatPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.mutablePreferencesOf
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.stringSetPreferencesKey
 import co.urbi.android.kit.data_store.data.crypto.CryptoManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.Json
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.Base64
 
 internal class PreferencesSerializer(
     private val cryptoManager: CryptoManager?,
@@ -84,15 +89,15 @@ internal class PreferencesSerializer(
         val valueStr = serialized.substringAfter(":", serialized)
 
         when (typePrefix) {
-            "s" -> prefs[androidx.datastore.preferences.core.stringPreferencesKey(keyName)] = valueStr
-            "i" -> prefs[androidx.datastore.preferences.core.intPreferencesKey(keyName)] = valueStr.toInt()
-            "l" -> prefs[androidx.datastore.preferences.core.longPreferencesKey(keyName)] = valueStr.toLong()
-            "f" -> prefs[androidx.datastore.preferences.core.floatPreferencesKey(keyName)] = valueStr.toFloat()
-            "d" -> prefs[androidx.datastore.preferences.core.doublePreferencesKey(keyName)] = valueStr.toDouble()
-            "b" -> prefs[androidx.datastore.preferences.core.booleanPreferencesKey(keyName)] = valueStr.toBoolean()
+            "s" -> prefs[stringPreferencesKey(keyName)] = valueStr
+            "i" -> prefs[intPreferencesKey(keyName)] = valueStr.toInt()
+            "l" -> prefs[longPreferencesKey(keyName)] = valueStr.toLong()
+            "f" -> prefs[floatPreferencesKey(keyName)] = valueStr.toFloat()
+            "d" -> prefs[doublePreferencesKey(keyName)] = valueStr.toDouble()
+            "b" -> prefs[booleanPreferencesKey(keyName)] = valueStr.toBoolean()
             "ss" -> {
                 val set = if (valueStr.isBlank()) emptySet() else valueStr.split(",").toSet()
-                prefs[androidx.datastore.preferences.core.stringSetPreferencesKey(keyName)] = set
+                prefs[stringSetPreferencesKey(keyName)] = set
             }
         }
     }

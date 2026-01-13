@@ -14,59 +14,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import co.urbi.android.kit.examples.data_store.utils.DataStoreInstance
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
-import java.util.UUID
+import co.urbi.android.kit.examples.data_store.event.DataStoreEvents
+import co.urbi.android.kit.examples.data_store.state.DataStoreState
 
 
 @Composable
-fun SecureDataStoreExample(modifier: Modifier = Modifier) {
+fun SecureDataStoreExample(
+    modifier: Modifier = Modifier,
+    state: DataStoreState,
+    event: (DataStoreEvents) -> Unit
 
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-
-    // Create separate instances - they use different files
-    val encryptedDataStore = remember { DataStoreInstance.Proto.getTinkInstance(context = context) }
-    val rawDataStore = remember { DataStoreInstance.Proto.getRawInstance(context = context) }
-
-    var useEncryption by remember { mutableStateOf(false) }
-
-    var encryptedAccessToken by remember { mutableStateOf("") }
-    var encryptedRefreshToken by remember { mutableStateOf("") }
-    var rawAccessToken by remember { mutableStateOf("") }
-    var rawRefreshToken by remember { mutableStateOf("") }
-
-    LaunchedEffect(Unit) {
-        launch {
-            encryptedDataStore.data().collectLatest {
-                encryptedAccessToken = it.accessToken
-                encryptedRefreshToken = it.refreshToken
-            }
-        }
-        launch {
-            rawDataStore.data().collectLatest {
-                rawAccessToken = it.accessToken
-                rawRefreshToken = it.refreshToken
-            }
-        }
-    }
-
-    val currentDataStore = if (useEncryption) encryptedDataStore else rawDataStore
-    val accessToken = if (useEncryption) encryptedAccessToken else rawAccessToken
-    val refreshToken = if (useEncryption) encryptedRefreshToken else rawRefreshToken
-
-
+) {
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
@@ -105,14 +66,14 @@ fun SecureDataStoreExample(modifier: Modifier = Modifier) {
                         style = MaterialTheme.typography.titleMedium
                     )
                     Text(
-                        text = if (useEncryption) "Enabled (AES CBC)" else "Disabled",
+                        text = if (state.useEncryption) "Enabled (AES CBC)" else "Disabled",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
                 Switch(
-                    checked = useEncryption,
-                    onCheckedChange = { useEncryption = it }
+                    checked = state.useEncryption,
+                    onCheckedChange = { event(DataStoreEvents.OnToggleEncryption) }
                 )
             }
         }
@@ -136,14 +97,7 @@ fun SecureDataStoreExample(modifier: Modifier = Modifier) {
                 ) {
                     Button(
                         onClick = {
-                            scope.launch {
-                                currentDataStore.updateData { data ->
-                                    data.copy(
-                                        accessToken = UUID.randomUUID().toString(),
-                                        refreshToken = UUID.randomUUID().toString()
-                                    )
-                                }
-                            }
+                           event(DataStoreEvents.OnGenerateCredential)
                         },
                         modifier = Modifier.weight(1f)
                     ) {
@@ -152,14 +106,7 @@ fun SecureDataStoreExample(modifier: Modifier = Modifier) {
 
                     Button(
                         onClick = {
-                            scope.launch {
-                                currentDataStore.updateData { data ->
-                                    data.copy(
-                                        accessToken = "",
-                                        refreshToken = ""
-                                    )
-                                }
-                            }
+                            event(DataStoreEvents.OnClearCredential)
                         },
                         modifier = Modifier.weight(1f)
                     ) {
@@ -182,8 +129,8 @@ fun SecureDataStoreExample(modifier: Modifier = Modifier) {
                     style = MaterialTheme.typography.titleMedium
                 )
 
-                TokenItem(label = "Access Token", value = accessToken.ifEmpty { "Not set" })
-                TokenItem(label = "Refresh Token", value = refreshToken.ifEmpty { "Not set" })
+                TokenItem(label = "Access Token", value = state.credential.accessToken.ifEmpty { "Not set" })
+                TokenItem(label = "Refresh Token", value = state.credential.refreshToken.ifEmpty { "Not set" })
             }
         }
 

@@ -1,4 +1,4 @@
-package co.urbi.android.kit.data_store.data
+package co.urbi.android.kit.data_store.data.data_store
 
 
 import androidx.datastore.core.DataStore
@@ -15,6 +15,7 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import co.urbi.android.kit.data_store.data.crypto.CryptoManager
+import co.urbi.android.kit.data_store.data.serializer.PreferencesSerializer
 import co.urbi.android.kit.data_store.domain.PreferencesDataStore
 import co.urbi.android.kit.data_store.domain.model.DataStoreSetup
 import co.urbi.android.kit.data_store.domain.model.FileType

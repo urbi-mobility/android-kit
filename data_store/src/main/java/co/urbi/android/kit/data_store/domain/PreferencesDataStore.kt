@@ -1,6 +1,6 @@
 package co.urbi.android.kit.data_store.domain
 
-import co.urbi.android.kit.data_store.data.PreferencesDataStoreImpl
+import co.urbi.android.kit.data_store.data.data_store.PreferencesDataStoreImpl
 import co.urbi.android.kit.data_store.data.crypto.Cipher
 import co.urbi.android.kit.data_store.data.crypto.Tink
 import co.urbi.android.kit.data_store.domain.model.CipherSetup
