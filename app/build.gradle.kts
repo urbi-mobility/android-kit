@@ -11,9 +11,7 @@ plugins {
 
 android {
     namespace = ProjectConfig.APPLICATION_ID
-    compileSdk {
-        version = release(ProjectConfig.COMPILE_SDK)
-    }
+    compileSdk = ProjectConfig.COMPILE_SDK
 
     defaultConfig {
         applicationId = ProjectConfig.APPLICATION_ID
