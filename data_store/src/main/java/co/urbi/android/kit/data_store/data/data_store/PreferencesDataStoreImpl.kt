@@ -16,9 +16,9 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import co.urbi.android.kit.data_store.data.crypto.CryptoManager
 import co.urbi.android.kit.data_store.data.serializer.PreferencesSerializer
+import co.urbi.android.kit.data_store.domain.PreferencesSecureDataStore
 import co.urbi.android.kit.data_store.domain.model.DataStoreSetup
 import co.urbi.android.kit.data_store.domain.model.FileType
-import co.urbi.android.kit.data_store.domain.PreferencesSecureDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

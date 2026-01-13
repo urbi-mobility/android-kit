@@ -1,7 +1,6 @@
 package co.urbi.android.kit.data_store.domain.model
 
 import android.content.Context
-import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 interface DataStoreSetup {
@@ -24,7 +23,12 @@ sealed interface FileType {
     data class CustomProtectedFile(val file: File) : FileType
 }
 
+
 sealed interface DataStoreType {
     data object Preferences : DataStoreType
+
+    /**
+     * The [schema] input should have be marked with @Serializable. It will be considered as default value for the [DataStoreType.Proto]. Please pass it as an instance.
+     */
     data class Proto<Schema>(val schema: Schema) : DataStoreType
 }

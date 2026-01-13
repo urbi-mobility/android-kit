@@ -16,39 +16,51 @@ object DataStoreInstance {
     object Proto {
         fun getCipherInstance(context: Context): ProtoSecureDataStore<CredentialModel> {
             val setup = DataStoreSetup.Builder(
-                file = FileType.CredentialProtectedFile(context, "urbi-kit-proto-cipher"),
+                file = FileType.CredentialProtectedFile(
+                    context = context,
+                    fileName = "urbi-kit-proto-cipher"
+                ),
                 type = DataStoreType.Proto(schema = CredentialModel())
             ).build()
-             return SecureDataStore.Builder<ProtoSecureDataStore<CredentialModel>>(setup = setup).encrypt(
-                CipherSetup(
-                    alias = "urbi-kit-proto-cipher",
-                    algorithm = KeyProperties.KEY_ALGORITHM_AES,
-                    blockMode = KeyProperties.BLOCK_MODE_CBC,
-                    padding = KeyProperties.ENCRYPTION_PADDING_PKCS7
-                )
-            ).build()
+            return SecureDataStore.Builder<ProtoSecureDataStore<CredentialModel>>(setup = setup)
+                .encrypt(
+                    CipherSetup(
+                        alias = "urbi-kit-proto-cipher",
+                        algorithm = KeyProperties.KEY_ALGORITHM_AES,
+                        blockMode = KeyProperties.BLOCK_MODE_CBC,
+                        padding = KeyProperties.ENCRYPTION_PADDING_PKCS7
+                    )
+                ).build()
         }
 
         fun getTinkInstance(context: Context): ProtoSecureDataStore<CredentialModel> {
             val setup = DataStoreSetup.Builder(
-                file = FileType.CredentialProtectedFile(context, "urbi-kit-proto-tink"),
+                file = FileType.CredentialProtectedFile(
+                    context = context,
+                    fileName = "urbi-kit-proto-tink"
+                ),
                 type = DataStoreType.Proto(schema = CredentialModel())
             ).build()
-            return SecureDataStore.Builder<ProtoSecureDataStore<CredentialModel>>(setup = setup).encrypt(
-                TinkSetup(
-                    context = context.applicationContext,
-                    keysetName = "urbi-kit-proto-tink",
-                    keysetFileName = "urbi-kit-proto-tink",
-                )
-            ).build()
+            return SecureDataStore.Builder<ProtoSecureDataStore<CredentialModel>>(setup = setup)
+                .encrypt(
+                    TinkSetup(
+                        context = context.applicationContext,
+                        keysetName = "urbi-kit-proto-tink",
+                        keysetFileName = "urbi-kit-proto-tink",
+                    )
+                ).build()
         }
 
         fun getRawInstance(context: Context): ProtoSecureDataStore<CredentialModel> {
             val setup = DataStoreSetup.Builder(
-                file = FileType.CredentialProtectedFile(context, "urbi-kit-proto-raw"),
+                file = FileType.CredentialProtectedFile(
+                    context = context,
+                    fileName = "urbi-kit-proto-raw"
+                ),
                 type = DataStoreType.Proto(schema = CredentialModel())
             ).build()
-            return SecureDataStore.Builder<ProtoSecureDataStore<CredentialModel>>(setup = setup,).build()
+            return SecureDataStore.Builder<ProtoSecureDataStore<CredentialModel>>(setup = setup)
+                .build()
         }
 
     }
@@ -56,7 +68,10 @@ object DataStoreInstance {
     object Preferences {
         fun getCipherInstance(context: Context): PreferencesSecureDataStore {
             val setup = DataStoreSetup.Builder(
-                file = FileType.CredentialProtectedFile(context = context, fileName = "urbi-kit-preferences-cipher"),
+                file = FileType.CredentialProtectedFile(
+                    context = context,
+                    fileName = "urbi-kit-preferences-cipher"
+                ),
                 type = DataStoreType.Preferences
             ).build()
             return SecureDataStore.Builder<PreferencesSecureDataStore>(setup = setup).encrypt(
@@ -71,7 +86,10 @@ object DataStoreInstance {
 
         fun getTinkInstance(context: Context): PreferencesSecureDataStore {
             val setup = DataStoreSetup.Builder(
-                file = FileType.CredentialProtectedFile(context, "urbi-kit-preferences-tink"),
+                file = FileType.CredentialProtectedFile(
+                    context = context,
+                    fileName = "urbi-kit-preferences-tink"
+                ),
                 type = DataStoreType.Preferences
             ).build()
             return SecureDataStore.Builder<PreferencesSecureDataStore>(setup = setup).encrypt(
@@ -85,7 +103,10 @@ object DataStoreInstance {
 
         fun getRawInstance(context: Context): PreferencesSecureDataStore {
             val setup = DataStoreSetup.Builder(
-                file = FileType.CredentialProtectedFile(context, "urbi-kit-preferences-raw"),
+                file = FileType.CredentialProtectedFile(
+                    context = context,
+                    fileName = "urbi-kit-preferences-raw"
+                ),
                 type = DataStoreType.Preferences
             ).build()
             return SecureDataStore.Builder<PreferencesSecureDataStore>(setup = setup).build()
