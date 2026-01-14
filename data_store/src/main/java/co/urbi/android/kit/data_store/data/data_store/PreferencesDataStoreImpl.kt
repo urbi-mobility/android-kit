@@ -21,7 +21,7 @@ import co.urbi.android.kit.data_store.domain.model.DataStoreSetup
 import co.urbi.android.kit.data_store.domain.model.FileType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-
+@Suppress("TooManyFunctions")
 internal class PreferencesDataStoreImpl(
     private val setup: DataStoreSetup,
     private val cryptoManager: CryptoManager?,

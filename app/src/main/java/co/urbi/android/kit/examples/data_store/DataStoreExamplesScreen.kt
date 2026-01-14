@@ -40,13 +40,15 @@ fun DataStoreExamplesScreen(
 
         ExampleCard(
             title = "SecureDataStore",
-            description = "Proto DataStore for structured objects with Kotlin Serialization. Perfect for storing complex data models.",
+            description = "Proto DataStore for structured objects with Kotlin Serialization." +
+                    "Perfect for storing complex data models.",
             onClick = onNavigateToSecureDataStore
         )
 
         ExampleCard(
             title = "PreferencesDataStore",
-            description = "Key-value storage for simple preferences with string keys. Ideal for user settings and flags.",
+            description = "Key-value storage for simple preferences with string keys." +
+                    "Ideal for user settings and flags.",
             onClick = onNavigateToPreferencesDataStore
         )
     }

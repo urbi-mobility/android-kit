@@ -12,7 +12,7 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
 
 internal class Cipher(private val setup: CipherSetup) : CryptoManager {
-    private val cipher = Cipher.getInstance("${setup.algorithm}/${setup.blockMode}/${setup.padding}")
+    private val cipherInstance = Cipher.getInstance("${setup.algorithm}/${setup.blockMode}/${setup.padding}")
     private val keyStore = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
     private fun createKey(): SecretKey {
         return KeyGenerator
@@ -39,19 +39,18 @@ internal class Cipher(private val setup: CipherSetup) : CryptoManager {
     }
 
     override fun encrypt(bytes: ByteArray): ByteArray {
-        cipher.init(Cipher.ENCRYPT_MODE, getKey())
-        val iv = cipher.iv
-        val encryptedBytes = cipher.doFinal(bytes)
+        cipherInstance.init(Cipher.ENCRYPT_MODE, getKey())
+        val iv = cipherInstance.iv
+        val encryptedBytes = cipherInstance.doFinal(bytes)
         return iv+encryptedBytes
     }
 
     override fun decrypt(inputStream: InputStream): InputStream {
         val bytes = inputStream.readBytes()
-        val iv = bytes.copyOfRange(0, cipher.blockSize)
-        val data = bytes.copyOfRange(cipher.blockSize, bytes.size)
-        cipher.init(Cipher.DECRYPT_MODE, getKey(), IvParameterSpec(iv))
-        val decryptedBytes = cipher.doFinal(data)
+        val iv = bytes.copyOfRange(0, cipherInstance.blockSize)
+        val data = bytes.copyOfRange(cipherInstance.blockSize, bytes.size)
+        cipherInstance.init(Cipher.DECRYPT_MODE, getKey(), IvParameterSpec(iv))
+        val decryptedBytes = cipherInstance.doFinal(data)
         return ByteArrayInputStream(decryptedBytes)
     }
 }
-

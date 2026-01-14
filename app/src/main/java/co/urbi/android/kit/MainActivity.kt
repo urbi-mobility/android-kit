@@ -14,6 +14,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,82 +39,86 @@ sealed class Screen {
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @OptIn(ExperimentalMaterial3Api::class)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             UrbiAndroidKitTheme {
-                var currentScreen by remember { mutableStateOf<Screen>(Screen.Home) }
+                Example()
+            }
+        }
+    }
+}
 
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    topBar = {
-                        TopAppBar(
-                            title = {
-                                Text(
-                                    text = when (currentScreen) {
-                                        Screen.Home -> "DataStore Examples"
-                                        Screen.SecureDataStore -> "SecureDataStore"
-                                        Screen.PreferencesDataStore -> "PreferencesDataStore"
-                                    }
-                                )
-                            },
-                            navigationIcon = {
-                                if (currentScreen != Screen.Home) {
-                                    IconButton(onClick = { currentScreen = Screen.Home }) {
-                                        Icon(
-                                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                            contentDescription = "Back"
-                                        )
-                                    }
-                                }
-                            }
-                        )
-                    }
-                ) { innerPadding ->
-                    when (currentScreen) {
-                        Screen.Home -> {
-                            DataStoreExamplesScreen(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(innerPadding),
-                                onNavigateToSecureDataStore = {
-                                    currentScreen = Screen.SecureDataStore
-                                },
-                                onNavigateToPreferencesDataStore = {
-                                    currentScreen = Screen.PreferencesDataStore
-                                }
-                            )
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+fun Example() {
+    var currentScreen by remember { mutableStateOf<Screen>(Screen.Home) }
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = when (currentScreen) {
+                            Screen.Home -> "DataStore Examples"
+                            Screen.SecureDataStore -> "SecureDataStore"
+                            Screen.PreferencesDataStore -> "PreferencesDataStore"
                         }
-
-                        Screen.SecureDataStore -> {
-                            val viewModel = hiltViewModel<DataStoreViewModel>()
-                            val state by viewModel.state.collectAsStateWithLifecycle()
-                            ProtoDataStore(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(innerPadding),
-                                state = state,
-                                event = viewModel::uiEvents
-                            )
-                        }
-
-                        Screen.PreferencesDataStore -> {
-                            val viewModel = hiltViewModel<PreferencesDataStoreViewModel>()
-                            val state by viewModel.state.collectAsStateWithLifecycle()
-                            PreferencesDataStoreExample(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(innerPadding),
-                                state = state,
-                                event = viewModel::uiEvents
+                    )
+                },
+                navigationIcon = {
+                    if (currentScreen != Screen.Home) {
+                        IconButton(onClick = { currentScreen = Screen.Home }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back"
                             )
                         }
                     }
                 }
+            )
+        }
+    ) { innerPadding ->
+        when (currentScreen) {
+            Screen.Home -> {
+                DataStoreExamplesScreen(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    onNavigateToSecureDataStore = {
+                        currentScreen = Screen.SecureDataStore
+                    },
+                    onNavigateToPreferencesDataStore = {
+                        currentScreen = Screen.PreferencesDataStore
+                    }
+                )
+            }
+
+            Screen.SecureDataStore -> {
+                val viewModel = hiltViewModel<DataStoreViewModel>()
+                val state by viewModel.state.collectAsStateWithLifecycle()
+                ProtoDataStore(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    state = state,
+                    event = viewModel::uiEvents
+                )
+            }
+
+            Screen.PreferencesDataStore -> {
+                val viewModel = hiltViewModel<PreferencesDataStoreViewModel>()
+                val state by viewModel.state.collectAsStateWithLifecycle()
+                PreferencesDataStoreExample(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    state = state,
+                    event = viewModel::uiEvents
+                )
             }
         }
     }
-
 }

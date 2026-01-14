@@ -28,7 +28,8 @@ sealed interface DataStoreType {
     data object Preferences : DataStoreType
 
     /**
-     * The [schema] input should have be marked with @Serializable. It will be considered as default value for the [DataStoreType.Proto]. Please pass it as an instance.
+     * The [schema] input should have be marked with @Serializable. It will be considered as
+     * default value for the [DataStoreType.Proto]. Please pass it as an instance.
      */
     data class Proto<Schema>(val schema: Schema) : DataStoreType
 }

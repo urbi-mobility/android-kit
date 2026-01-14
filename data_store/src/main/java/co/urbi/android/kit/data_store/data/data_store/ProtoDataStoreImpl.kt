@@ -43,9 +43,15 @@ internal class ProtoDataStoreImpl<T>(
             ),
             produceFile = {
                 when (val file = setup.file) {
-                    is FileType.CredentialProtectedFile -> file.context.dataStoreFile(fileName = file.fileName)
-                    is FileType.DeviceProtectedFile -> file.context.deviceProtectedDataStoreFile(fileName = file.fileName)
-                    is FileType.CustomProtectedFile -> file.file
+                    is FileType.CredentialProtectedFile -> {
+                        file.context.dataStoreFile(fileName = file.fileName)
+                    }
+                    is FileType.DeviceProtectedFile -> {
+                        file.context.deviceProtectedDataStoreFile(fileName = file.fileName)
+                    }
+                    is FileType.CustomProtectedFile -> {
+                        file.file
+                    }
                 }
             }
         )

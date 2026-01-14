@@ -1,7 +1,7 @@
 package co.urbi.android.kit.data_store.domain
 
 import kotlinx.coroutines.flow.Flow
-
+@Suppress("TooManyFunctions")
 interface PreferencesSecureDataStore {
     fun data(): Flow<Map<String, Any>>
     fun getString(key: String): Flow<String?>

@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
 
+@Suppress("MagicNumber")
 @HiltViewModel
 class PreferencesDataStoreViewModel @Inject constructor(
     @ApplicationContext context: Context
