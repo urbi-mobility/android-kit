@@ -5,6 +5,7 @@ import co.urbi.android.kit.data_store.data.crypto.Tink
 import co.urbi.android.kit.data_store.data.data_store.PreferencesDataStoreImpl
 import co.urbi.android.kit.data_store.data.data_store.ProtoDataStoreImpl
 import co.urbi.android.kit.data_store.domain.model.CipherSetup
+import co.urbi.android.kit.data_store.domain.model.CryptoSetup
 import co.urbi.android.kit.data_store.domain.model.DataStoreSetup
 import co.urbi.android.kit.data_store.domain.model.DataStoreType
 import co.urbi.android.kit.data_store.domain.model.TinkSetup
@@ -14,13 +15,11 @@ interface SecureDataStore {
         internal var cipherSetup: CipherSetup? = null
         internal var tinkSetup: TinkSetup? = null
 
-        fun encrypt(cipher: CipherSetup): Builder<Type> {
-            cipherSetup = cipher
-            return this
-        }
-
-        fun encrypt(tink: TinkSetup): Builder<Type> {
-            tinkSetup = tink
+        fun encrypt(setup: CryptoSetup): Builder<Type> {
+            when(setup) {
+                is CipherSetup -> cipherSetup = setup
+                is TinkSetup -> tinkSetup = setup
+            }
             return this
         }
 

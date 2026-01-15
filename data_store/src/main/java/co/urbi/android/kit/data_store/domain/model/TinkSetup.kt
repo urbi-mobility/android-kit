@@ -9,4 +9,4 @@ data class TinkSetup(
     val keysetName: String,
     val keysetFileName: String,
     val keyTemplate: KeyTemplate = AeadKeyTemplates.AES256_GCM
-)
+): CryptoSetup
