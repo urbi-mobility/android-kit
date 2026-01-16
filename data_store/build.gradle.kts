@@ -5,7 +5,7 @@ apply {
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -15,9 +15,14 @@ android {
 
 dependencies {
     implementation(libs.androidx.datastore)
+    implementation(libs.androidx.datastore.preferences.core)
     implementation(libs.jetbrains.kotlinx.serialization.json)
 }
 
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
+}
+
+dependencies{
+    implementation(libs.tink)
 }

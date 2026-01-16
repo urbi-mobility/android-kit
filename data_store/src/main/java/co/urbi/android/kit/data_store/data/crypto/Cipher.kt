@@ -1,22 +1,19 @@
-package co.urbi.android.kit.data_store.data
+package co.urbi.android.kit.data_store.data.crypto
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
-import co.urbi.android.kit.data_store.domain.model.CryptoSetup
+import co.urbi.android.kit.data_store.domain.model.CryptoSetup.CipherSetup
+import java.io.ByteArrayInputStream
+import java.io.InputStream
 import java.security.KeyStore
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
 
-
-internal class Crypto(private val setup: CryptoSetup) {
-
-    private val cipher =
-        Cipher.getInstance("${setup.algorithm}/${setup.blockMode}/${setup.padding}")
-    private val keyStore = KeyStore
-        .getInstance("AndroidKeyStore").apply { load(null) }
-
+internal class Cipher(private val setup: CipherSetup) : CryptoManager {
+    private val cipherInstance = Cipher.getInstance("${setup.algorithm}/${setup.blockMode}/${setup.padding}")
+    private val keyStore = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
     private fun createKey(): SecretKey {
         return KeyGenerator
             .getInstance(setup.algorithm)
@@ -36,23 +33,24 @@ internal class Crypto(private val setup: CryptoSetup) {
             }
             .generateKey()
     }
-
     private fun getKey(): SecretKey {
         val existingKey = keyStore.getEntry(setup.alias, null) as? KeyStore.SecretKeyEntry
         return existingKey?.secretKey ?: createKey()
     }
 
-    fun encrypt(bytes: ByteArray): ByteArray {
-        cipher.init(Cipher.ENCRYPT_MODE, getKey())
-        val iv = cipher.iv
-        val encrypted = cipher.doFinal(bytes)
-        return iv + encrypted
+    override fun encrypt(bytes: ByteArray): ByteArray {
+        cipherInstance.init(Cipher.ENCRYPT_MODE, getKey())
+        val iv = cipherInstance.iv
+        val encryptedBytes = cipherInstance.doFinal(bytes)
+        return iv+encryptedBytes
     }
 
-    fun decrypt(bytes: ByteArray): ByteArray {
-        val iv = bytes.copyOfRange(0, cipher.blockSize)
-        val data = bytes.copyOfRange(cipher.blockSize, bytes.size)
-        cipher.init(Cipher.DECRYPT_MODE, getKey(), IvParameterSpec(iv))
-        return cipher.doFinal(data)
+    override fun decrypt(inputStream: InputStream): InputStream {
+        val bytes = inputStream.readBytes()
+        val iv = bytes.copyOfRange(0, cipherInstance.blockSize)
+        val data = bytes.copyOfRange(cipherInstance.blockSize, bytes.size)
+        cipherInstance.init(Cipher.DECRYPT_MODE, getKey(), IvParameterSpec(iv))
+        val decryptedBytes = cipherInstance.doFinal(data)
+        return ByteArrayInputStream(decryptedBytes)
     }
 }

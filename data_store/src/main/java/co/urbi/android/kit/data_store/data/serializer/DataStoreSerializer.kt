@@ -1,0 +1,46 @@
+package co.urbi.android.kit.data_store.data.serializer
+
+import androidx.datastore.core.CorruptionException
+import androidx.datastore.core.Serializer
+import co.urbi.android.kit.data_store.data.crypto.CryptoManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
+import java.io.InputStream
+import java.io.OutputStream
+
+
+internal class DataStoreSerializer<T>(
+    default: T,
+    private val cryptoManager: CryptoManager?,
+    private val serializer: KSerializer<T>
+) : Serializer<T> {
+
+    override val defaultValue: T = default
+
+    override suspend fun readFrom(input: InputStream): T {
+        try {
+            val inputString = withContext(Dispatchers.IO) {
+                val inputStream = cryptoManager?.decrypt(inputStream = input) ?: input
+                inputStream.use { it.readBytes() }
+            }.decodeToString()
+            return Json.decodeFromString(serializer, inputString)
+        }catch (serialization: SerializationException){
+            throw CorruptionException("Unable to deserialize data", serialization)
+        }
+
+    }
+
+    override suspend fun writeTo(t: T, output: OutputStream) {
+        val inputString = Json.encodeToString(serializer, t)
+        val bytes = inputString.toByteArray()
+        withContext(Dispatchers.IO) {
+            val info = cryptoManager?.encrypt(bytes = bytes) ?: bytes
+            output.use {
+                it.write(info)
+            }
+        }
+    }
+}

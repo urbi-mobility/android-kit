@@ -17,6 +17,11 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
     }
+    versionCatalogs {
+        create("libs") {
+            from(files("android-scripts/gradle/libs-urbi.versions.toml"))
+        }
+    }
 }
 
 rootProject.name = "Urbi Android Kit"

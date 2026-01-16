@@ -1,0 +1,3 @@
+[submodule "android-scripts"]
+	path = android-scripts
+	url = https://github.com/urbi-mobility/android-scripts.git

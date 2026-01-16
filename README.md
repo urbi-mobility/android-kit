@@ -9,6 +9,30 @@ A Kotlin Android library collection ('Urbi-Kit') providing reusable, production-
 
 ---
 
+## 🚀 Getting Started
+
+### Clone the Repository
+
+When cloning this repository, make sure to initialize the submodules:
+
+```bash
+# Clone with submodules
+git clone --recurse-submodules https://github.com/urbi-mobility/android-kit.git
+
+# Or if you already cloned it, initialize submodules separately
+git submodule update --init --recursive
+```
+
+### Build the Project
+
+After cloning with submodules:
+
+```bash
+./gradlew clean build
+```
+
+---
+
 
 ## ⚙️ Configuration
 Please check each module's folder to see how to set it up.
