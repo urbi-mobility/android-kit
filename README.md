@@ -1,6 +1,11 @@
 # Urbi Android Kit
 
-`Urbi-Kit` is a Kotlin Android library that provides general functionality used in most applications, including Urbi!
+A Kotlin Android library collection ('Urbi-Kit') providing reusable, production-ready components and utilities used across Urbi mobile apps. The repository is organized as a monorepo with small, focused modules that are easy to adopt in apps or other libraries.
+
+## Key goals:
+- Provide simple, well-documented building blocks for Android apps
+- Use modern Kotlin, Kotlinx Serialization, Coroutines, Jetpack libraries
+- Offer optional secure defaults (e.g., encrypted storage) for sensitive data
 
 ---
 
@@ -17,3 +22,13 @@ This is part of the larger `Urbi-Kit` monorepo:
 * ⏳ More coming soon...
 
 ---
+
+## 🧑‍💻👩‍💻 Contributing
+Contributions are welcome. Please:
+- Open an issue to discuss larger changes
+- Create PRs with small, focused changes and tests/examples when applicable
+- Follow standard Kotlin/Android style, add documentation and examples
+
+
+## ✉️ Contact
+For questions about usage or integration, open an issue in this repository.
