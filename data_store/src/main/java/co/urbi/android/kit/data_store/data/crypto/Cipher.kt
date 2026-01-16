@@ -2,7 +2,7 @@ package co.urbi.android.kit.data_store.data.crypto
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
-import co.urbi.android.kit.data_store.domain.model.CipherSetup
+import co.urbi.android.kit.data_store.domain.model.CryptoSetup.CipherSetup
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.security.KeyStore

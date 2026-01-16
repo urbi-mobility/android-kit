@@ -5,11 +5,11 @@ import android.security.keystore.KeyProperties
 import co.urbi.android.kit.data_store.domain.PreferencesSecureDataStore
 import co.urbi.android.kit.data_store.domain.ProtoSecureDataStore
 import co.urbi.android.kit.data_store.domain.SecureDataStore
-import co.urbi.android.kit.data_store.domain.model.CipherSetup
+import co.urbi.android.kit.data_store.domain.model.CryptoSetup.CipherSetup
 import co.urbi.android.kit.data_store.domain.model.DataStoreSetup
 import co.urbi.android.kit.data_store.domain.model.DataStoreType
 import co.urbi.android.kit.data_store.domain.model.FileType
-import co.urbi.android.kit.data_store.domain.model.TinkSetup
+import co.urbi.android.kit.data_store.domain.model.CryptoSetup.TinkSetup
 
 object DataStoreInstance {
 

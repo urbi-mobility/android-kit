@@ -4,11 +4,12 @@ import co.urbi.android.kit.data_store.data.crypto.Cipher
 import co.urbi.android.kit.data_store.data.crypto.Tink
 import co.urbi.android.kit.data_store.data.data_store.PreferencesDataStoreImpl
 import co.urbi.android.kit.data_store.data.data_store.ProtoDataStoreImpl
-import co.urbi.android.kit.data_store.domain.model.CipherSetup
+import co.urbi.android.kit.data_store.domain.model.CryptoSetup.CipherSetup
+import co.urbi.android.kit.data_store.domain.model.CryptoSetup.TinkSetup
 import co.urbi.android.kit.data_store.domain.model.CryptoSetup
 import co.urbi.android.kit.data_store.domain.model.DataStoreSetup
 import co.urbi.android.kit.data_store.domain.model.DataStoreType
-import co.urbi.android.kit.data_store.domain.model.TinkSetup
+
 
 interface SecureDataStore {
     class Builder<Type>(private val setup: DataStoreSetup) {

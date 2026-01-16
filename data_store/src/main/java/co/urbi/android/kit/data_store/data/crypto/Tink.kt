@@ -1,7 +1,7 @@
 package co.urbi.android.kit.data_store.data.crypto
 
 
-import co.urbi.android.kit.data_store.domain.model.TinkSetup
+import co.urbi.android.kit.data_store.domain.model.CryptoSetup.TinkSetup
 import com.google.crypto.tink.Aead
 import com.google.crypto.tink.RegistryConfiguration
 import com.google.crypto.tink.aead.AeadConfig
