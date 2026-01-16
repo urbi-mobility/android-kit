@@ -1,5 +1,6 @@
 package co.urbi.android.kit.data_store.data.serializer
 
+import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
@@ -15,6 +16,7 @@ import androidx.datastore.preferences.core.stringSetPreferencesKey
 import co.urbi.android.kit.data_store.data.crypto.CryptoManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.SerializationException
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -22,14 +24,18 @@ internal class PreferencesSerializer(
     private val cryptoManager: CryptoManager?,
 ) : Serializer<Preferences> {
 
-    override val defaultValue: Preferences =  emptyPreferences()
+    override val defaultValue: Preferences = emptyPreferences()
 
     override suspend fun readFrom(input: InputStream): Preferences {
-        val inputBytes = withContext(Dispatchers.IO) {
-            val inputStream = cryptoManager?.decrypt(inputStream = input) ?: input
-            inputStream.use { it.readBytes() }
+        try {
+            val inputBytes = withContext(Dispatchers.IO) {
+                val inputStream = cryptoManager?.decrypt(inputStream = input) ?: input
+                inputStream.use { it.readBytes() }
+            }
+            return deserializePreferences(inputBytes)
+        } catch (serialization: SerializationException) {
+            throw CorruptionException("Unable to deserialize data", serialization)
         }
-        return deserializePreferences(inputBytes)
     }
 
     override suspend fun writeTo(t: Preferences, output: OutputStream) {
