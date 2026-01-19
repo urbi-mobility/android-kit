@@ -4,11 +4,13 @@ package co.urbi.android.kit.data_store.data.data_store
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.deviceProtectedDataStoreFile
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
@@ -34,7 +36,8 @@ internal class PreferencesDataStoreImpl(
                 is FileType.CredentialProtectedFile -> file.context.dataStoreFile(fileName = file.fileName)
                 is FileType.DeviceProtectedFile -> file.context.deviceProtectedDataStoreFile(fileName = file.fileName)
                 is FileType.CustomProtectedFile -> file.file
-            } }
+            } },
+            corruptionHandler = ReplaceFileCorruptionHandler { emptyPreferences() }
         )
     }
 
