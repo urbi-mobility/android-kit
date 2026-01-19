@@ -52,7 +52,7 @@ The generated documentation will be available in `data_store/build/dokka/gfm`.
 
 This is part of the larger `Urbi-Kit` monorepo:
 
-- ✅ [`Urbi-Kit-SecureDataStore`](https://github.com/urbi-mobility/android-kit/tree/main/data_store) – An easy way of securly storing user data using jetpack data store.
+- ✅ [`Urbi-Kit-SecureDataStore`](https://github.com/urbi-mobility/android-kit/tree/main/data_store) – An easy way of securely storing user data using jetpack data store.
 - ⏳ More coming soon...
 
 ---
