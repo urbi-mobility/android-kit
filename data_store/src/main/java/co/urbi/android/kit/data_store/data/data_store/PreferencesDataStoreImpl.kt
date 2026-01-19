@@ -35,14 +35,19 @@ internal class PreferencesDataStoreImpl(
     private val dataStore: DataStore<Preferences> by lazy {
         DataStoreFactory.create(
             serializer = PreferencesSerializer(cryptoManager),
-            produceFile = {  when (val file = setup.file) {
-                is FileType.CredentialProtectedFile -> file.context.dataStoreFile(fileName = file.fileName)
-                is FileType.DeviceProtectedFile -> file.context.deviceProtectedDataStoreFile(fileName = file.fileName)
-                is FileType.CustomProtectedFile -> file.file
-            } },
+            produceFile = {
+                when (val file = setup.file) {
+                    is FileType.CredentialProtectedFile -> file.context.dataStoreFile(fileName = file.fileName)
+                    is FileType.DeviceProtectedFile -> file.context.deviceProtectedDataStoreFile(
+                        fileName = file.fileName
+                    )
+
+                    is FileType.CustomProtectedFile -> file.file
+                }
+            },
             corruptionHandler = ReplaceFileCorruptionHandler { exception ->
                 Timber.tag("PreferencesDataStore").e(
-                    t=exception,
+                    t = exception,
                     message = "Preferences DataStore corruption detected. Replacing with empty preferences."
                 )
                 emptyPreferences()
