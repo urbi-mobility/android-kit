@@ -48,6 +48,48 @@ To generate the documentation for the modules (e.g., `data_store`), run the foll
 
 The generated documentation will be available in `data_store/build/dokka/gfm`.
 
+## 📦 Publishing to Maven Central
+
+The library modules can be published to Maven Central via the [Sonatype Central Portal](https://central.sonatype.com).
+
+### Environment Variables
+
+Configure the following environment variables (e.g., in `~/.zprofile`):
+
+```bash
+# Maven Central credentials (from Sonatype Central Portal token)
+export MAVEN_CENTRAL_USERNAME="<your-token-username>"
+export MAVEN_CENTRAL_PASSWORD="<your-token-password>"
+
+# GPG Signing
+export SIGNING_KEY_ID="<last-8-chars-of-gpg-key>"
+export SIGNING_PASSWORD="<gpg-passphrase>"
+export SIGNING_SECRET_KEY_FILE="/path/to/.gradle/secring.asc"
+```
+
+After editing, run `source ~/.zprofile` to apply changes.
+
+### Publishing Tasks
+
+| Task                                          | Description                          |
+| --------------------------------------------- | ------------------------------------ |
+| `publishCentralPortalPublicationToMavenLocal` | Publish to local Maven (for testing) |
+| `publishToCentralPortal`                      | Publish to Central Portal staging    |
+
+**Publish to Maven Local (test):**
+
+```bash
+./gradlew :data_store:publishCentralPortalPublicationToMavenLocal
+```
+
+**Publish to Maven Central:**
+
+```bash
+./gradlew :data_store:publishToCentralPortal
+```
+
+After publishing, visit [central.sonatype.com](https://central.sonatype.com) to review and release the staged deployment.
+
 ## 📁 Modules
 
 This is part of the larger `Urbi-Kit` monorepo:
