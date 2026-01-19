@@ -22,6 +22,13 @@ import co.urbi.android.kit.data_store.domain.model.FileType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 @Suppress("TooManyFunctions")
+/**
+ * Internal implementation of [PreferencesSecureDataStore] that uses [DataStore] to persist data.
+ * This class handles the actual reading and writing of preferences.
+ *
+ * @param setup The configuration for the data store file.
+ * @param cryptoManager The manager for encryption and decryption.
+ */
 internal class PreferencesDataStoreImpl(
     private val setup: DataStoreSetup,
     private val cryptoManager: CryptoManager?,

@@ -15,6 +15,14 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.serializer
 
 
+/**
+ * Internal implementation of [ProtoSecureDataStore] that uses [DataStore] to persist protocol buffer data.
+ * @param T The type of the data managed by this data store.
+ *
+ * @param schema The instance of the data schema.
+ * @param setup The configuration for the data store file.
+ * @param cryptoManager The manager for encryption and decryption.
+ */
 internal class ProtoDataStoreImpl<T>(
     private val schema:T,
     private val setup: DataStoreSetup,
