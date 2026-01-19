@@ -1,7 +1,6 @@
 package co.urbi.android.kit.data_store.data.data_store
 
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.deviceProtectedDataStoreFile
