@@ -1,6 +1,7 @@
 package co.urbi.android.kit.data_store.data.data_store
 
 
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.deviceProtectedDataStoreFile
@@ -23,6 +24,8 @@ import co.urbi.android.kit.data_store.domain.model.DataStoreSetup
 import co.urbi.android.kit.data_store.domain.model.FileType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
+
 @Suppress("TooManyFunctions")
 internal class PreferencesDataStoreImpl(
     private val setup: DataStoreSetup,
@@ -37,7 +40,13 @@ internal class PreferencesDataStoreImpl(
                 is FileType.DeviceProtectedFile -> file.context.deviceProtectedDataStoreFile(fileName = file.fileName)
                 is FileType.CustomProtectedFile -> file.file
             } },
-            corruptionHandler = ReplaceFileCorruptionHandler { emptyPreferences() }
+            corruptionHandler = ReplaceFileCorruptionHandler { exception ->
+                Timber.tag("PreferencesDataStore").e(
+                    t=exception,
+                    message = "Preferences DataStore corruption detected. Replacing with empty preferences."
+                )
+                emptyPreferences()
+            }
         )
     }
 

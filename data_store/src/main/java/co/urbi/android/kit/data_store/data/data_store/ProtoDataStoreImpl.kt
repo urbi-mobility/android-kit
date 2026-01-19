@@ -14,10 +14,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.serializer
+import timber.log.Timber
 
 
 internal class ProtoDataStoreImpl<T>(
-    private val schema:T,
+    private val schema: T,
     private val setup: DataStoreSetup,
     private val cryptoManager: CryptoManager?,
 ) : ProtoSecureDataStore<T> {
@@ -47,15 +48,23 @@ internal class ProtoDataStoreImpl<T>(
                     is FileType.CredentialProtectedFile -> {
                         file.context.dataStoreFile(fileName = file.fileName)
                     }
+
                     is FileType.DeviceProtectedFile -> {
                         file.context.deviceProtectedDataStoreFile(fileName = file.fileName)
                     }
+
                     is FileType.CustomProtectedFile -> {
                         file.file
                     }
                 }
             },
-            corruptionHandler = ReplaceFileCorruptionHandler { schema }
+            corruptionHandler = ReplaceFileCorruptionHandler { exception ->
+                Timber.tag("PreferencesDataStore").e(
+                    t = exception,
+                    message = "Preferences DataStore corruption detected. Replacing with empty preferences."
+                )
+                schema
+            }
         )
     }
 }
