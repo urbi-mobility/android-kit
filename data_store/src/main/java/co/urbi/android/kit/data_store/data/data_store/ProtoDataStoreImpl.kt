@@ -59,9 +59,9 @@ internal class ProtoDataStoreImpl<T>(
                 }
             },
             corruptionHandler = ReplaceFileCorruptionHandler { exception ->
-                Timber.tag("PreferencesDataStore").e(
+                Timber.tag("ProtoDataStore").e(
                     t = exception,
-                    message = "Preferences DataStore corruption detected. Replacing with empty preferences."
+                    message = "Proto DataStore corruption detected. Replacing with schema default value."
                 )
                 schema
             }
