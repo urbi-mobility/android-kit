@@ -3,6 +3,7 @@ package co.urbi.android.kit.data_store.data.data_store
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.deviceProtectedDataStoreFile
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.dataStoreFile
 import co.urbi.android.kit.data_store.data.crypto.CryptoManager
 import co.urbi.android.kit.data_store.data.serializer.DataStoreSerializer
@@ -53,7 +54,8 @@ internal class ProtoDataStoreImpl<T>(
                         file.file
                     }
                 }
-            }
+            },
+            corruptionHandler = ReplaceFileCorruptionHandler { schema }
         )
     }
 }
