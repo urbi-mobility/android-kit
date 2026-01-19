@@ -4,11 +4,13 @@ package co.urbi.android.kit.data_store.data.data_store
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.deviceProtectedDataStoreFile
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
@@ -21,6 +23,8 @@ import co.urbi.android.kit.data_store.domain.model.DataStoreSetup
 import co.urbi.android.kit.data_store.domain.model.FileType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
+
 @Suppress("TooManyFunctions")
 /**
  * Internal implementation of [PreferencesSecureDataStore] that uses [DataStore] to persist data.
@@ -37,11 +41,23 @@ internal class PreferencesDataStoreImpl(
     private val dataStore: DataStore<Preferences> by lazy {
         DataStoreFactory.create(
             serializer = PreferencesSerializer(cryptoManager),
-            produceFile = {  when (val file = setup.file) {
-                is FileType.CredentialProtectedFile -> file.context.dataStoreFile(fileName = file.fileName)
-                is FileType.DeviceProtectedFile -> file.context.deviceProtectedDataStoreFile(fileName = file.fileName)
-                is FileType.CustomProtectedFile -> file.file
-            } }
+            produceFile = {
+                when (val file = setup.file) {
+                    is FileType.CredentialProtectedFile -> file.context.dataStoreFile(fileName = file.fileName)
+                    is FileType.DeviceProtectedFile -> file.context.deviceProtectedDataStoreFile(
+                        fileName = file.fileName
+                    )
+
+                    is FileType.CustomProtectedFile -> file.file
+                }
+            },
+            corruptionHandler = ReplaceFileCorruptionHandler { exception ->
+                Timber.tag("PreferencesDataStore").e(
+                    t = exception,
+                    message = "Preferences DataStore corruption detected. Replacing with empty preferences."
+                )
+                emptyPreferences()
+            }
         )
     }
 
