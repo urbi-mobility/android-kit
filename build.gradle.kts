@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.detekt)
 }
 
+
 subprojects {
     apply(plugin = rootProject.libs.plugins.detekt.get().pluginId)
     detekt {
