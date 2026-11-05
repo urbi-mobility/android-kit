@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-11-04
+
+### Changed
+
+- Dependency: updated `androidx.datastore` to `1.3.0` for 16 kB memory page size compliance (`libdatastore_shared_counter.so`).
+
 ## [1.0.0] - 2026-01-20
 
 ### Added
