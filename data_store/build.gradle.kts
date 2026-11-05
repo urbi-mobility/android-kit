@@ -51,11 +51,21 @@ val signingPassword = getEnvOrProperty("SIGNING_PASSWORD", "signing.password")
 val signingKey = getEnvOrProperty("SIGNING_KEY", "signing.key")
 val signingKeyFile = getEnvOrProperty("SIGNING_SECRET_KEY_FILE", "signing.secretKeyRingFile")
 
+// If signingKey is not provided directly, try reading it from signingKeyFile if it's an ASCII-armored key
+val resolvedSigningKey = signingKey ?: signingKeyFile?.let { path ->
+    val file = File(path)
+    if (file.exists() && file.isFile) file.readText() else null
+}
+
 // Set signing properties for the signing plugin used by central portal publisher
-if (signingKeyId != null && signingPassword != null && signingKeyFile != null) {
+if (signingKeyId != null && signingPassword != null) {
     extra["signing.keyId"] = signingKeyId
     extra["signing.password"] = signingPassword
-    extra["signing.secretKeyRingFile"] = signingKeyFile
+    if (resolvedSigningKey != null) {
+        extra["signing.key"] = resolvedSigningKey
+    } else if (signingKeyFile != null) {
+        extra["signing.secretKeyRingFile"] = signingKeyFile
+    }
 }
 
 // Configure Sonatype Central Portal publishing
@@ -94,10 +104,10 @@ centralPortal {
         }
     }
     
-    // Use in-memory signing if SIGNING_KEY env var is provided
-    if (signingKey != null && signingKeyId != null && signingPassword != null) {
+    // Use in-memory signing if resolvedSigningKey is available
+    if (resolvedSigningKey != null && signingKeyId != null && signingPassword != null) {
         signing {
-            useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+            useInMemoryPgpKeys(signingKeyId, resolvedSigningKey, signingPassword)
         }
     }
     
